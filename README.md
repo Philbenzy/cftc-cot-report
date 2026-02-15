@@ -124,4 +124,4 @@ MIT License
 
 thedarksideomoono@gmail.com
 
-祝大家2026多多赚钱～
+祝大家2026多多陪伴家人，多多赚钱～
