@@ -1,7 +1,6 @@
 # CFTC COT 金属期货持仓分析仪表盘
 
 基于 CFTC（美国商品期货交易委员会）COT（Commitments of Traders）报告的金属期货持仓可视化分析工具。
-
 ## 功能特性
 
 - **多品种支持**：黄金、白银、铜、铂金、钯金
@@ -12,6 +11,19 @@
   - 未平仓合约量（含中位数标注）
   - 多空持仓对比（近12周）
 - **数据表格**：周度持仓变化明细，含变化率
+
+一、净持仓与边际变化
+
+<img width="1478" height="729" alt="image" src="https://github.com/user-attachments/assets/4bf3f064-7519-4f87-984f-d867adc1e991" />
+
+二、未平仓合约量 & 多空对比
+
+中位数似乎是一个很好的观察指标
+<img width="1459" height="354" alt="image" src="https://github.com/user-attachments/assets/ffec40c0-5a9c-41c6-b6a7-d447303895b6" />
+
+三、明细表
+<img width="1442" height="417" alt="image" src="https://github.com/user-attachments/assets/b8fea785-90e3-4d81-8064-01871135d6a3" />
+
 
 ## 项目结构
 
@@ -107,3 +119,9 @@ python cftc_data_fetcher.py
 ## 许可证
 
 MIT License
+
+## 联系我
+
+thedarksideomoono@gmail.com
+
+祝大家2026多多赚钱～
