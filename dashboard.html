@@ -204,30 +204,30 @@
   <div class="charts">
     <!-- 净持仓趋势 + 边际变化组合图 -->
     <div class="chart-card full">
-      <div class="chart-title">净持仓趋势与边际变化</div>
+      <div class="chart-title" id="title-combo">净持仓趋势与边际变化</div>
       <div class="chart-subtitle">折线：净持仓水平 | 柱状：周度变化量（右轴）</div>
       <div class="chart-container tall"><canvas id="comboChart"></canvas></div>
     </div>
 
     <!-- 变化率分析 -->
     <div class="chart-card full">
-      <div class="chart-title">非商业持仓周度变化</div>
+      <div class="chart-title" id="title-change">非商业持仓周度变化</div>
       <div class="chart-subtitle">绿色增仓 / 红色减仓 | 虚线为均值</div>
       <div class="chart-container"><canvas id="changeChart"></canvas></div>
     </div>
 
     <div class="chart-card">
-      <div class="chart-title">未平仓合约量</div>
+      <div class="chart-title" id="title-oi">未平仓合约量</div>
       <div class="chart-container"><canvas id="oiChart"></canvas></div>
     </div>
     <div class="chart-card">
-      <div class="chart-title">多空持仓对比（近12周）</div>
+      <div class="chart-title" id="title-compare">多空持仓对比（近12周）</div>
       <div class="chart-container"><canvas id="compareChart"></canvas></div>
     </div>
   </div>
 
   <div class="table-card">
-    <div class="chart-title">周度持仓变化明细</div>
+    <div class="chart-title" id="title-table">周度持仓变化明细</div>
     <table id="dataTable"></table>
   </div>
 
@@ -319,6 +319,14 @@
       const timeText = currentWeeks === 13 ? '3个月' : currentWeeks === 26 ? '6个月' : currentWeeks === 52 ? '1年' : '3年';
       document.getElementById('pageSubtitle').textContent = `Commitments of Traders | 近${timeText}持仓数据分析`;
       document.getElementById('updateTime').innerHTML = `<div>最新数据: ${data.summary.latest_date}</div><div>更新时间: ${ALL_DATA.updated_at}</div>`;
+
+      // 更新所有图表标题，加入品种标识
+      const tag = `${data.name_en} ${data.name}`;
+      document.getElementById('title-combo').textContent   = `${tag} - 净持仓趋势与边际变化`;
+      document.getElementById('title-change').textContent  = `${tag} - 非商业持仓周度变化`;
+      document.getElementById('title-oi').textContent      = `${tag} - 未平仓合约量`;
+      document.getElementById('title-compare').textContent = `${tag} - 多空持仓对比（近12周）`;
+      document.getElementById('title-table').textContent   = `${tag} - 周度持仓变化明细`;
     }
 
     function renderMetrics(s) {

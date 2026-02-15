@@ -37,15 +37,25 @@ COMMODITIES = {
         "name_en": "PALLADIUM (NYMEX)",
         "pattern": r"^PALLADIUM - NEW YORK MERCANTILE"
     },
-    "crude_oil": {
-        "name": "原油",
-        "name_en": "CRUDE OIL (NYMEX)",
-        "pattern": r"^CRUDE OIL, LIGHT SWEET - NEW YORK MERCANTILE"
+    "micro_gold": {
+        "name": "微型黄金",
+        "name_en": "MICRO GOLD (COMEX)",
+        "pattern": r"^MICRO GOLD - COMMODITY EXCHANGE"
     },
-    "natural_gas": {
-        "name": "天然气",
-        "name_en": "NATURAL GAS (NYMEX)",
-        "pattern": r"^NATURAL GAS - NEW YORK MERCANTILE"
+    "aluminum": {
+        "name": "铝",
+        "name_en": "ALUMINUM (COMEX)",
+        "pattern": r"^ALUMINUM - COMMODITY EXCHANGE"
+    },
+    "cobalt": {
+        "name": "钴",
+        "name_en": "COBALT (COMEX)",
+        "pattern": r"^COBALT - COMMODITY EXCHANGE"
+    },
+    "lithium": {
+        "name": "氢氧化锂",
+        "name_en": "LITHIUM HYDROXIDE (COMEX)",
+        "pattern": r"^LITHIUM HYDROXIDE - COMMODITY EXCHANGE"
     }
 }
 
