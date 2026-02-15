@@ -453,13 +453,28 @@
 
       // 多空对比
       const recent = weeklyData.slice(-12);
+      const recentLabels = recent.map(d => d.date.slice(5));
+
+      // 计算近12周多头、空头中位数
+      const calcMedian = arr => {
+        const sorted = [...arr].sort((a, b) => a - b);
+        const mid = Math.floor(sorted.length / 2);
+        return sorted.length % 2 === 0 ? (sorted[mid - 1] + sorted[mid]) / 2 : sorted[mid];
+      };
+      const longData = recent.map(d => d.noncomm_long);
+      const shortData = recent.map(d => d.noncomm_short);
+      const medianLong = calcMedian(longData);
+      const medianShort = calcMedian(shortData);
+
       charts.compare = new Chart(document.getElementById('compareChart'), {
         type: 'bar',
         data: {
-          labels: recent.map(d => d.date.slice(5)),
+          labels: recentLabels,
           datasets: [
-            { label: '非商业多头', data: recent.map(d => d.noncomm_long), backgroundColor: '#22c55e' },
-            { label: '非商业空头', data: recent.map(d => d.noncomm_short), backgroundColor: '#ef4444' }
+            { label: '非商业多头', data: longData, backgroundColor: longData.map(v => v >= medianLong ? '#22c55e' : '#1a3d2b'), order: 2 },
+            { label: '非商业空头', data: shortData, backgroundColor: shortData.map(v => v >= medianShort ? '#ef4444' : '#3d1a1a'), order: 2 },
+            { label: '多头中位数 ' + fmtAxis(medianLong), data: Array(recentLabels.length).fill(medianLong), type: 'line', borderColor: '#22c55e', borderDash: [8, 4], borderWidth: 2, pointRadius: 0, fill: false, order: 1 },
+            { label: '空头中位数 ' + fmtAxis(medianShort), data: Array(recentLabels.length).fill(medianShort), type: 'line', borderColor: '#ef4444', borderDash: [8, 4], borderWidth: 2, pointRadius: 0, fill: false, order: 1 }
           ]
         },
         options: {
