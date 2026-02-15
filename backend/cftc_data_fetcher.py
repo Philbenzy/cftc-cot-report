@@ -59,8 +59,8 @@ def fetch_cot_data(years: list = None) -> pd.DataFrame:
     """
     if years is None:
         current_year = datetime.now().year
-        # 获取近两年数据以支持一年的时间范围
-        years = [current_year - 1, current_year]
+        # 获取近4年数据以支持3年的时间范围
+        years = [current_year - 3, current_year - 2, current_year - 1, current_year]
 
     all_data = []
     for year in years:
@@ -245,7 +245,7 @@ def main():
                 print(f"    警告: 未找到 {config['name']} 数据")
                 continue
 
-            records = process_commodity_data(commodity_df, weeks=52)
+            records = process_commodity_data(commodity_df, weeks=156)
             if not records:
                 print(f"    警告: {config['name']} 数据处理失败")
                 continue

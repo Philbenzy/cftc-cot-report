@@ -186,6 +186,7 @@
         <button class="time-btn" data-weeks="13">3个月</button>
         <button class="time-btn" data-weeks="26">6个月</button>
         <button class="time-btn active" data-weeks="52">1年</button>
+        <button class="time-btn" data-weeks="156">3年</button>
       </div>
     </div>
   </div>
@@ -315,7 +316,7 @@
 
     function renderHeader(data) {
       document.getElementById('pageTitle').textContent = `CFTC COT Report - ${data.name_en}`;
-      const timeText = currentWeeks === 13 ? '3个月' : currentWeeks === 26 ? '6个月' : '1年';
+      const timeText = currentWeeks === 13 ? '3个月' : currentWeeks === 26 ? '6个月' : currentWeeks === 52 ? '1年' : '3年';
       document.getElementById('pageSubtitle').textContent = `Commitments of Traders | 近${timeText}持仓数据分析`;
       document.getElementById('updateTime').innerHTML = `<div>最新数据: ${data.summary.latest_date}</div><div>更新时间: ${ALL_DATA.updated_at}</div>`;
     }
