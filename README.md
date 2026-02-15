@@ -99,6 +99,7 @@ python cftc_data_fetcher.py
 
 ## 技术栈
 
+- **组件支持**：cot_reports 项目地址：https://github.com/NDelventhal/cot_reports
 - **后端**：Python + cot-reports 库
 - **前端**：HTML + Chart.js
 - **数据源**：CFTC 官方数据
