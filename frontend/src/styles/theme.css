@@ -1,0 +1,287 @@
+/* CFTC Gold Dashboard - 金融终端深色主题 */
+
+:root {
+  --color-gold: #D4AF37;
+  --color-gold-light: #E5C76B;
+  --color-gold-dark: #B8952F;
+  --color-bg-primary: #0d0d0d;
+  --color-bg-secondary: #1a1a1a;
+  --color-bg-card: #252525;
+  --color-bg-card-hover: #2d2d2d;
+  --color-border: #333333;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #888888;
+  --color-text-muted: #666666;
+  --color-long: #22c55e;
+  --color-long-light: #4ade80;
+  --color-short: #ef4444;
+  --color-short-light: #f87171;
+  --color-comm: #3b82f6;
+  --color-noncomm: #D4AF37;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  line-height: 1.6;
+}
+
+.dashboard {
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.dashboard-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--color-gold);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.dashboard-subtitle {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  margin-top: 4px;
+}
+
+.update-time {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  text-align: right;
+}
+
+/* 指标卡片 */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.metric-card {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 20px;
+  transition: all 0.2s ease;
+}
+
+.metric-card:hover {
+  background: var(--color-bg-card-hover);
+  border-color: var(--color-gold-dark);
+}
+
+.metric-label {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.metric-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.metric-value.positive {
+  color: var(--color-long);
+}
+
+.metric-value.negative {
+  color: var(--color-short);
+}
+
+.metric-change {
+  font-size: 13px;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.metric-change.positive {
+  color: var(--color-long);
+}
+
+.metric-change.negative {
+  color: var(--color-short);
+}
+
+/* 图表容器 */
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 1200px) {
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.chart-card {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.chart-card.full-width {
+  grid-column: span 2;
+}
+
+@media (max-width: 1200px) {
+  .chart-card.full-width {
+    grid-column: span 1;
+  }
+}
+
+.chart-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-gold);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.chart-container {
+  height: 280px;
+}
+
+/* 表格 */
+.table-card {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 20px;
+  overflow-x: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.data-table th {
+  text-align: left;
+  padding: 12px 16px;
+  background: var(--color-bg-secondary);
+  color: var(--color-text-secondary);
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.data-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+}
+
+.data-table tr:hover td {
+  background: var(--color-bg-card-hover);
+}
+
+.data-table .positive {
+  color: var(--color-long);
+}
+
+.data-table .negative {
+  color: var(--color-short);
+}
+
+.data-table .number {
+  font-family: 'SF Mono', monospace;
+  text-align: right;
+}
+
+/* 图例 */
+.legend {
+  display: flex;
+  gap: 20px;
+  margin-top: 12px;
+  justify-content: center;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.legend-dot.noncomm {
+  background: var(--color-noncomm);
+}
+
+.legend-dot.comm {
+  background: var(--color-comm);
+}
+
+.legend-dot.long {
+  background: var(--color-long);
+}
+
+.legend-dot.short {
+  background: var(--color-short);
+}
+
+/* 加载状态 */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  color: var(--color-gold);
+  font-size: 16px;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-gold);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: 12px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

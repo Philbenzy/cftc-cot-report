@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CFTC COT Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gold: #D4AF37;
+      --gold-dark: #B8952F;
+      --bg-primary: #0d0d0d;
+      --bg-card: #252525;
+      --bg-card-hover: #2d2d2d;
+      --border: #333;
+      --text: #fff;
+      --text-muted: #888;
+      --green: #22c55e;
+      --red: #ef4444;
+      --blue: #3b82f6;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg-primary);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 24px;
+    }
+
+    /* 控制栏 */
+    .controls {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .control-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .control-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+    .select-wrapper { position: relative; }
+    select {
+      appearance: none;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      padding: 10px 36px 10px 14px;
+      font-family: inherit;
+      font-size: 14px;
+      cursor: pointer;
+      min-width: 180px;
+    }
+    select:hover { border-color: var(--gold-dark); }
+    select:focus { outline: none; border-color: var(--gold); }
+    .select-wrapper::after {
+      content: '▼';
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 10px;
+      pointer-events: none;
+    }
+
+    .time-buttons { display: flex; gap: 8px; }
+    .time-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-muted);
+      padding: 10px 20px;
+      font-family: inherit;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .time-btn:hover { border-color: var(--gold-dark); color: var(--text); }
+    .time-btn.active { background: var(--gold); border-color: var(--gold); color: #000; font-weight: 600; }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .title { font-size: 24px; font-weight: 600; color: var(--gold); }
+    .subtitle { font-size: 14px; color: var(--text-muted); margin-top: 4px; }
+    .update-time { font-size: 12px; color: var(--text-muted); text-align: right; }
+
+    /* Metrics */
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .metric-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      transition: all 0.2s;
+    }
+    .metric-card:hover { background: var(--bg-card-hover); border-color: var(--gold-dark); }
+    .metric-label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; }
+    .metric-value { font-size: 26px; font-weight: 700; }
+    .metric-value.positive { color: var(--green); }
+    .metric-value.negative { color: var(--red); }
+    .metric-change { font-size: 12px; margin-top: 8px; }
+    .metric-change.positive { color: var(--green); }
+    .metric-change.negative { color: var(--red); }
+
+    /* Charts */
+    .charts {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 1200px) { .charts { grid-template-columns: 1fr; } }
+    .chart-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+    }
+    .chart-card.full { grid-column: span 2; }
+    @media (max-width: 1200px) { .chart-card.full { grid-column: span 1; } }
+    .chart-title { font-size: 14px; font-weight: 600; color: var(--gold); margin-bottom: 16px; }
+    .chart-subtitle { font-size: 11px; color: var(--text-muted); margin-top: -12px; margin-bottom: 16px; }
+    .chart-container { height: 260px; position: relative; }
+    .chart-container.tall { height: 320px; }
+
+    /* Table */
+    .table-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      overflow-x: auto;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th {
+      text-align: left;
+      padding: 12px 16px;
+      background: var(--bg-primary);
+      color: var(--text-muted);
+      font-weight: 500;
+      text-transform: uppercase;
+      font-size: 11px;
+      border-bottom: 1px solid var(--border);
+    }
+    td { padding: 12px 16px; border-bottom: 1px solid var(--border); }
+    tr:hover td { background: var(--bg-card-hover); }
+    .num { text-align: right; font-family: 'JetBrains Mono', monospace; }
+    .pos { color: var(--green); }
+    .neg { color: var(--red); }
+  </style>
+</head>
+<body>
+  <!-- 控制栏 -->
+  <div class="controls">
+    <div class="control-group">
+      <span class="control-label">品种</span>
+      <div class="select-wrapper">
+        <select id="commoditySelect"></select>
+      </div>
+    </div>
+    <div class="control-group">
+      <span class="control-label">时间范围</span>
+      <div class="time-buttons">
+        <button class="time-btn" data-weeks="13">3个月</button>
+        <button class="time-btn" data-weeks="26">6个月</button>
+        <button class="time-btn active" data-weeks="52">1年</button>
+      </div>
+    </div>
+  </div>
+
+  <header class="header">
+    <div>
+      <h1 class="title" id="pageTitle">CFTC COT Report</h1>
+      <p class="subtitle" id="pageSubtitle">Commitments of Traders</p>
+    </div>
+    <div class="update-time" id="updateTime"></div>
+  </header>
+
+  <div class="metrics" id="metrics"></div>
+
+  <div class="charts">
+    <!-- 净持仓趋势 + 边际变化组合图 -->
+    <div class="chart-card full">
+      <div class="chart-title">净持仓趋势与边际变化</div>
+      <div class="chart-subtitle">折线：净持仓水平 | 柱状：周度变化量（右轴）</div>
+      <div class="chart-container tall"><canvas id="comboChart"></canvas></div>
+    </div>
+
+    <!-- 变化率分析 -->
+    <div class="chart-card full">
+      <div class="chart-title">非商业持仓周度变化</div>
+      <div class="chart-subtitle">绿色增仓 / 红色减仓 | 虚线为均值</div>
+      <div class="chart-container"><canvas id="changeChart"></canvas></div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-title">未平仓合约量</div>
+      <div class="chart-container"><canvas id="oiChart"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">多空持仓对比（近12周）</div>
+      <div class="chart-container"><canvas id="compareChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="table-card">
+    <div class="chart-title">周度持仓变化明细</div>
+    <table id="dataTable"></table>
+  </div>
+
+  <script>
+    let ALL_DATA = null;
+    let currentCommodity = 'gold';
+    let currentWeeks = 52;
+    let charts = {};
+
+    const fmt = n => n == null ? '-' : n.toLocaleString();
+    const fmtChg = n => n == null ? '-' : (n > 0 ? '+' : '') + n.toLocaleString();
+    const fmtAxis = v => Math.abs(v) >= 1e6 ? (v/1e6).toFixed(1)+'M' : Math.abs(v) >= 1e3 ? (v/1e3).toFixed(0)+'K' : v;
+    const fmtPct = n => n == null ? '-' : (n > 0 ? '+' : '') + n.toFixed(1) + '%';
+
+    Chart.defaults.color = '#888';
+    Chart.defaults.borderColor = '#333';
+    Chart.defaults.font.family = "'JetBrains Mono', monospace";
+
+    async function loadData() {
+      try {
+        const res = await fetch('./data/cot_data.json');
+        if (res.ok) ALL_DATA = await res.json();
+        else throw new Error('Failed');
+      } catch (e) {
+        console.error('使用内置数据', e);
+        ALL_DATA = FALLBACK_DATA;
+      }
+      initUI();
+      render();
+    }
+
+    function initUI() {
+      const select = document.getElementById('commoditySelect');
+      select.innerHTML = ALL_DATA.commodity_list.map(c =>
+        `<option value="${c.code}">${c.name} (${c.name_en})</option>`
+      ).join('');
+      select.value = currentCommodity;
+      select.addEventListener('change', e => { currentCommodity = e.target.value; render(); });
+
+      document.querySelectorAll('.time-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentWeeks = parseInt(btn.dataset.weeks);
+          render();
+        });
+      });
+    }
+
+    function getCurrentData() {
+      const commodity = ALL_DATA.commodities[currentCommodity];
+      if (!commodity) return null;
+
+      const weekly = commodity.weekly_data.slice(-currentWeeks);
+      const latest = weekly[weekly.length - 1];
+
+      // 计算变化率
+      const prev = weekly.length > 1 ? weekly[weekly.length - 2] : latest;
+      const noncommPctChg = prev.noncomm_net !== 0 ? ((latest.noncomm_net - prev.noncomm_net) / Math.abs(prev.noncomm_net)) * 100 : 0;
+      const commPctChg = prev.comm_net !== 0 ? ((latest.comm_net - prev.comm_net) / Math.abs(prev.comm_net)) * 100 : 0;
+
+      const summary = {
+        latest_date: latest.date,
+        noncomm_net: latest.noncomm_net,
+        comm_net: latest.comm_net,
+        open_interest: latest.open_interest,
+        noncomm_net_change: latest.noncomm_net_change,
+        comm_net_change: latest.comm_net_change,
+        oi_change: latest.oi_change,
+        long_short_ratio: (latest.noncomm_long / Math.max(latest.noncomm_short, 1)).toFixed(2),
+        noncomm_pct_change: noncommPctChg,
+        comm_pct_change: commPctChg
+      };
+
+      return { name: commodity.name, name_en: commodity.name_en, summary, weekly_data: weekly };
+    }
+
+    function render() {
+      const data = getCurrentData();
+      if (!data) return;
+      renderHeader(data);
+      renderMetrics(data.summary);
+      renderCharts(data.weekly_data);
+      renderTable(data.weekly_data);
+    }
+
+    function renderHeader(data) {
+      document.getElementById('pageTitle').textContent = `CFTC COT Report - ${data.name_en}`;
+      const timeText = currentWeeks === 13 ? '3个月' : currentWeeks === 26 ? '6个月' : '1年';
+      document.getElementById('pageSubtitle').textContent = `Commitments of Traders | 近${timeText}持仓数据分析`;
+      document.getElementById('updateTime').innerHTML = `<div>最新数据: ${data.summary.latest_date}</div><div>更新时间: ${ALL_DATA.updated_at}</div>`;
+    }
+
+    function renderMetrics(s) {
+      const cards = [
+        { label: '非商业净持仓', value: s.noncomm_net, change: s.noncomm_net_change, pct: s.noncomm_pct_change },
+        { label: '商业净持仓', value: s.comm_net, change: s.comm_net_change, pct: s.comm_pct_change },
+        { label: '未平仓合约', value: s.open_interest, change: s.oi_change },
+        { label: '多空比', value: s.long_short_ratio, isRatio: true }
+      ];
+      document.getElementById('metrics').innerHTML = cards.map(c => {
+        const vClass = c.isRatio ? '' : c.value > 0 ? ' positive' : c.value < 0 ? ' negative' : '';
+        const cClass = c.change > 0 ? ' positive' : c.change < 0 ? ' negative' : '';
+        const pctText = c.pct !== undefined ? ` (${fmtPct(c.pct)})` : '';
+        return `<div class="metric-card">
+          <div class="metric-label">${c.label}</div>
+          <div class="metric-value${vClass}">${c.isRatio ? c.value : fmt(c.value)}</div>
+          ${c.change !== undefined ? `<div class="metric-change${cClass}">周变化: ${fmtChg(c.change)}${pctText}</div>` : ''}
+        </div>`;
+      }).join('');
+    }
+
+    function renderCharts(weeklyData) {
+      const labels = weeklyData.map(d => d.date.slice(5));
+      Object.values(charts).forEach(c => c.destroy());
+      charts = {};
+
+      // 组合图：净持仓趋势 + 边际变化
+      const noncommChanges = weeklyData.map(d => d.noncomm_net_change);
+      charts.combo = new Chart(document.getElementById('comboChart'), {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: '非商业净持仓',
+              data: weeklyData.map(d => d.noncomm_net),
+              borderColor: '#D4AF37',
+              backgroundColor: 'rgba(212,175,55,0.1)',
+              tension: 0.3,
+              yAxisID: 'y',
+              order: 1
+            },
+            {
+              label: '商业净持仓',
+              data: weeklyData.map(d => d.comm_net),
+              borderColor: '#3b82f6',
+              backgroundColor: 'rgba(59,130,246,0.1)',
+              tension: 0.3,
+              yAxisID: 'y',
+              order: 2
+            },
+            {
+              label: '非商业周变化',
+              data: noncommChanges,
+              type: 'bar',
+              backgroundColor: noncommChanges.map(v => v >= 0 ? 'rgba(34,197,94,0.6)' : 'rgba(239,68,68,0.6)'),
+              borderColor: noncommChanges.map(v => v >= 0 ? '#22c55e' : '#ef4444'),
+              borderWidth: 1,
+              yAxisID: 'y1',
+              order: 3
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: { legend: { position: 'bottom' } },
+          scales: {
+            y: { type: 'linear', position: 'left', ticks: { callback: fmtAxis } },
+            y1: { type: 'linear', position: 'right', grid: { drawOnChartArea: false }, ticks: { callback: fmtAxis } }
+          }
+        }
+      });
+
+      // 周度变化柱状图（带均值线）
+      const avgChange = noncommChanges.reduce((a,b) => a+b, 0) / noncommChanges.length;
+      charts.change = new Chart(document.getElementById('changeChart'), {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: '周度变化',
+              data: noncommChanges,
+              backgroundColor: noncommChanges.map(v => v >= 0 ? 'rgba(34,197,94,0.7)' : 'rgba(239,68,68,0.7)'),
+              borderColor: noncommChanges.map(v => v >= 0 ? '#22c55e' : '#ef4444'),
+              borderWidth: 1
+            },
+            {
+              label: '均值',
+              data: Array(labels.length).fill(avgChange),
+              type: 'line',
+              borderColor: '#888',
+              borderDash: [5, 5],
+              borderWidth: 2,
+              pointRadius: 0,
+              fill: false
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { position: 'bottom' } },
+          scales: { y: { ticks: { callback: fmtAxis } } }
+        }
+      });
+
+      // 未平仓合约
+      const oiData = weeklyData.map(d => d.open_interest);
+      const avgOI = oiData.reduce((a,b) => a+b, 0) / oiData.length;
+      // 计算中位数
+      const sortedOI = [...oiData].sort((a, b) => a - b);
+      const midIdx = Math.floor(sortedOI.length / 2);
+      const medianOI = sortedOI.length % 2 === 0 ? (sortedOI[midIdx - 1] + sortedOI[midIdx]) / 2 : sortedOI[midIdx];
+      charts.oi = new Chart(document.getElementById('oiChart'), {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [
+            { label: '未平仓合约', data: oiData, backgroundColor: oiData.map(v => v >= medianOI ? '#FFD700' : '#5c4a1f'), order: 2 },
+            { label: '中位数 ' + fmtAxis(medianOI), data: Array(labels.length).fill(medianOI), type: 'line', borderColor: '#ef4444', borderDash: [8, 4], borderWidth: 3, pointRadius: 0, fill: false, order: 1 }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { position: 'bottom' } },
+          scales: { y: { ticks: { callback: fmtAxis } } }
+        }
+      });
+
+      // 多空对比
+      const recent = weeklyData.slice(-12);
+      charts.compare = new Chart(document.getElementById('compareChart'), {
+        type: 'bar',
+        data: {
+          labels: recent.map(d => d.date.slice(5)),
+          datasets: [
+            { label: '非商业多头', data: recent.map(d => d.noncomm_long), backgroundColor: '#22c55e' },
+            { label: '非商业空头', data: recent.map(d => d.noncomm_short), backgroundColor: '#ef4444' }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { position: 'bottom' } },
+          scales: { y: { ticks: { callback: fmtAxis } } }
+        }
+      });
+    }
+
+    function renderTable(weeklyData) {
+      const rows = [...weeklyData].reverse();
+      document.getElementById('dataTable').innerHTML = `
+        <thead><tr>
+          <th>日期</th>
+          <th class="num">非商业净持仓</th><th class="num">周变化</th><th class="num">变化率</th>
+          <th class="num">商业净持仓</th><th class="num">周变化</th>
+          <th class="num">未平仓合约</th><th class="num">周变化</th>
+        </tr></thead>
+        <tbody>${rows.map((r, i) => {
+          const prev = i < rows.length - 1 ? rows[i + 1] : r;
+          const pctChg = prev.noncomm_net !== 0 ? ((r.noncomm_net - prev.noncomm_net) / Math.abs(prev.noncomm_net)) * 100 : 0;
+          return `<tr>
+            <td>${r.date}</td>
+            <td class="num">${fmt(r.noncomm_net)}</td>
+            <td class="num ${r.noncomm_net_change > 0 ? 'pos' : r.noncomm_net_change < 0 ? 'neg' : ''}">${fmtChg(r.noncomm_net_change)}</td>
+            <td class="num ${pctChg > 0 ? 'pos' : pctChg < 0 ? 'neg' : ''}">${fmtPct(pctChg)}</td>
+            <td class="num">${fmt(r.comm_net)}</td>
+            <td class="num ${r.comm_net_change > 0 ? 'pos' : r.comm_net_change < 0 ? 'neg' : ''}">${fmtChg(r.comm_net_change)}</td>
+            <td class="num">${fmt(r.open_interest)}</td>
+            <td class="num ${r.oi_change > 0 ? 'pos' : r.oi_change < 0 ? 'neg' : ''}">${fmtChg(r.oi_change)}</td>
+          </tr>`;
+        }).join('')}</tbody>`;
+    }
+
+    const FALLBACK_DATA = {
+      "commodity_list": [{"code": "gold", "name": "黄金", "name_en": "GOLD (COMEX)"}],
+      "commodities": {
+        "gold": {
+          "name": "黄金", "name_en": "GOLD (COMEX)",
+          "summary": {"latest_date": "2026-02-10", "noncomm_net": 160012, "comm_net": -197738, "open_interest": 404391, "noncomm_net_change": -5592, "comm_net_change": 10040, "oi_change": -5303, "long_short_ratio": 4.03},
+          "weekly_data": [
+            {"date": "2025-11-18", "noncomm_long": 269556, "noncomm_short": 59217, "open_interest": 471953, "noncomm_net": 210339, "comm_net": -245585, "noncomm_net_change": 0, "comm_net_change": 0, "oi_change": 0},
+            {"date": "2025-11-25", "noncomm_long": 253266, "noncomm_short": 48678, "open_interest": 432946, "noncomm_net": 204588, "comm_net": -241403, "noncomm_net_change": -5751, "comm_net_change": 4182, "oi_change": -39007},
+            {"date": "2025-12-02", "noncomm_long": 261331, "noncomm_short": 43771, "open_interest": 418490, "noncomm_net": 217560, "comm_net": -255348, "noncomm_net_change": 12972, "comm_net_change": -13945, "oi_change": -14456},
+            {"date": "2025-12-09", "noncomm_long": 268485, "noncomm_short": 44599, "open_interest": 432569, "noncomm_net": 223886, "comm_net": -262579, "noncomm_net_change": 6326, "comm_net_change": -7231, "oi_change": 14079},
+            {"date": "2025-12-16", "noncomm_long": 280920, "noncomm_short": 46942, "open_interest": 471093, "noncomm_net": 233978, "comm_net": -274358, "noncomm_net_change": 10092, "comm_net_change": -11779, "oi_change": 38524},
+            {"date": "2025-12-23", "noncomm_long": 290161, "noncomm_short": 49461, "open_interest": 492103, "noncomm_net": 240700, "comm_net": -283526, "noncomm_net_change": 6722, "comm_net_change": -9168, "oi_change": 21010},
+            {"date": "2025-12-30", "noncomm_long": 275592, "noncomm_short": 44419, "open_interest": 481866, "noncomm_net": 231173, "comm_net": -275246, "noncomm_net_change": -9527, "comm_net_change": 8280, "oi_change": -10237},
+            {"date": "2026-01-06", "noncomm_long": 274435, "noncomm_short": 46803, "open_interest": 488116, "noncomm_net": 227632, "comm_net": -272035, "noncomm_net_change": -3541, "comm_net_change": 3211, "oi_change": 6250},
+            {"date": "2026-01-13", "noncomm_long": 296183, "noncomm_short": 44945, "open_interest": 527455, "noncomm_net": 251238, "comm_net": -297106, "noncomm_net_change": 23606, "comm_net_change": -25071, "oi_change": 39339},
+            {"date": "2026-01-20", "noncomm_long": 295772, "noncomm_short": 51002, "open_interest": 528004, "noncomm_net": 244770, "comm_net": -289689, "noncomm_net_change": -6468, "comm_net_change": 7417, "oi_change": 549},
+            {"date": "2026-01-27", "noncomm_long": 252100, "noncomm_short": 46704, "open_interest": 488463, "noncomm_net": 205396, "comm_net": -248285, "noncomm_net_change": -39374, "comm_net_change": 41404, "oi_change": -39541},
+            {"date": "2026-02-03", "noncomm_long": 214508, "noncomm_short": 48904, "open_interest": 409694, "noncomm_net": 165604, "comm_net": -207778, "noncomm_net_change": -39792, "comm_net_change": 40507, "oi_change": -78769},
+            {"date": "2026-02-10", "noncomm_long": 212808, "noncomm_short": 52796, "open_interest": 404391, "noncomm_net": 160012, "comm_net": -197738, "noncomm_net_change": -5592, "comm_net_change": 10040, "oi_change": -5303}
+          ]
+        }
+      },
+      "updated_at": "2026-02-15"
+    };
+
+    loadData();
+  </script>
+</body>
+</html>

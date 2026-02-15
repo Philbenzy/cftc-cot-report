@@ -1,0 +1,4 @@
+cot-reports
+pandas
+requests
+beautifulsoup4

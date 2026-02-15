@@ -1,0 +1,26 @@
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 临时数据文件
+annual.txt
+c_year.txt
+*.xlsx
+
+# 调试文件
+bug.png
+
+# Node
+node_modules/
+
+# Python
+__pycache__/
+*.pyc
+.env
+
+# IDE
+.vscode/
+.idea/
+
+# Claude
+.claude/
