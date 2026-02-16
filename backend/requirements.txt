@@ -2,3 +2,4 @@ cot-reports
 pandas
 requests
 beautifulsoup4
+yfinance

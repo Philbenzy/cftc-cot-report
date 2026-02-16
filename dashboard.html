@@ -224,6 +224,18 @@
       <div class="chart-title" id="title-compare">多空持仓对比（近12周）</div>
       <div class="chart-container"><canvas id="compareChart"></canvas></div>
     </div>
+
+    <!-- GVZ 图表：仅黄金品种显示 -->
+    <div class="chart-card full gold-only" id="gvzComboCard" style="display:none">
+      <div class="chart-title" id="title-gvz-combo">GVZ 波动率 vs 非商业净持仓</div>
+      <div class="chart-subtitle">GVZ 上升 = 市场恐慌 | 观察波动率与投机持仓的背离关系</div>
+      <div class="chart-container tall"><canvas id="gvzComboChart"></canvas></div>
+    </div>
+    <div class="chart-card full gold-only" id="gvzCard" style="display:none">
+      <div class="chart-title" id="title-gvz">GVZ 黄金波动率指数</div>
+      <div class="chart-subtitle">紫线：GVZ（左轴） | 金柱：GLD 周成交量（右轴） | 灰色虚线为均值</div>
+      <div class="chart-container"><canvas id="gvzChart"></canvas></div>
+    </div>
   </div>
 
   <div class="table-card">
@@ -311,6 +323,7 @@
       renderHeader(data);
       renderMetrics(data.summary);
       renderCharts(data.weekly_data);
+      renderGVZ(data.weekly_data);
       renderTable(data.weekly_data);
     }
 
@@ -322,11 +335,13 @@
 
       // 更新所有图表标题，加入品种标识
       const tag = `${data.name_en} ${data.name}`;
-      document.getElementById('title-combo').textContent   = `${tag} - 净持仓趋势与边际变化`;
-      document.getElementById('title-change').textContent  = `${tag} - 非商业持仓周度变化`;
-      document.getElementById('title-oi').textContent      = `${tag} - 未平仓合约量`;
-      document.getElementById('title-compare').textContent = `${tag} - 多空持仓对比（近12周）`;
-      document.getElementById('title-table').textContent   = `${tag} - 周度持仓变化明细`;
+      document.getElementById('title-combo').textContent     = `${tag} - 净持仓趋势与边际变化`;
+      document.getElementById('title-change').textContent    = `${tag} - 非商业持仓周度变化`;
+      document.getElementById('title-oi').textContent        = `${tag} - 未平仓合约量`;
+      document.getElementById('title-compare').textContent   = `${tag} - 多空持仓对比（近12周）`;
+      document.getElementById('title-table').textContent     = `${tag} - 周度持仓变化明细`;
+      document.getElementById('title-gvz-combo').textContent = `${tag} - GVZ 波动率 vs 非商业净持仓`;
+      document.getElementById('title-gvz').textContent       = `${tag} - GVZ 黄金波动率指数`;
     }
 
     function renderMetrics(s) {
@@ -491,6 +506,148 @@
           maintainAspectRatio: false,
           plugins: { legend: { position: 'bottom' } },
           scales: { y: { ticks: { callback: fmtAxis } } }
+        }
+      });
+    }
+
+    function renderGVZ(weeklyData) {
+      const isGold = currentCommodity === 'gold' || currentCommodity === 'micro_gold';
+      document.getElementById('gvzComboCard').style.display = isGold ? '' : 'none';
+      document.getElementById('gvzCard').style.display = isGold ? '' : 'none';
+      if (!isGold || !ALL_DATA.gvz || !ALL_DATA.gvz.length) return;
+
+      // 将 GVZ 按 COT 日期对齐（取最近一个周二的值）
+      const gvzMap = {};
+      ALL_DATA.gvz.forEach(d => { gvzMap[d.date] = d.close; });
+
+      const gldVolMap = {};
+      ALL_DATA.gvz.forEach(d => { if (d.gld_volume != null) gldVolMap[d.date] = d.gld_volume; });
+
+      const aligned = weeklyData.map(d => ({
+        date: d.date.slice(5),
+        noncomm_net: d.noncomm_net,
+        gvz: gvzMap[d.date] ?? null,
+        gld_volume: gldVolMap[d.date] ?? null
+      }));
+
+      const gvzValues = aligned.map(d => d.gvz).filter(v => v !== null);
+      const avgGVZ = gvzValues.reduce((a, b) => a + b, 0) / gvzValues.length;
+      const sortedGVZ = [...gvzValues].sort((a, b) => a - b);
+      const mid = Math.floor(sortedGVZ.length / 2);
+      const medianGVZ = sortedGVZ.length % 2 === 0 ? (sortedGVZ[mid - 1] + sortedGVZ[mid]) / 2 : sortedGVZ[mid];
+
+      const gldVolValues = aligned.map(d => d.gld_volume).filter(v => v !== null);
+      const sortedVol = [...gldVolValues].sort((a, b) => a - b);
+      const midV = Math.floor(sortedVol.length / 2);
+      const medianGldVol = sortedVol.length % 2 === 0 ? (sortedVol[midV - 1] + sortedVol[midV]) / 2 : sortedVol[midV];
+      const avgGldVol = gldVolValues.length ? gldVolValues.reduce((a, b) => a + b, 0) / gldVolValues.length : 0;
+
+      if (charts.gvzCombo) charts.gvzCombo.destroy();
+      if (charts.gvz) charts.gvz.destroy();
+
+      // 图1：GVZ vs 净持仓双轴
+      charts.gvzCombo = new Chart(document.getElementById('gvzComboChart'), {
+        type: 'line',
+        data: {
+          labels: aligned.map(d => d.date),
+          datasets: [
+            {
+              label: '非商业净持仓',
+              data: aligned.map(d => d.noncomm_net),
+              borderColor: '#D4AF37',
+              backgroundColor: 'rgba(212,175,55,0.1)',
+              tension: 0.3,
+              yAxisID: 'y',
+              order: 1
+            },
+            {
+              label: 'GVZ 波动率',
+              data: aligned.map(d => d.gvz),
+              borderColor: '#a78bfa',
+              backgroundColor: 'rgba(167,139,250,0.1)',
+              tension: 0.3,
+              yAxisID: 'y1',
+              order: 2
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: { legend: { position: 'bottom' } },
+          scales: {
+            y:  { type: 'linear', position: 'left',  ticks: { callback: fmtAxis } },
+            y1: { type: 'linear', position: 'right', grid: { drawOnChartArea: false }, ticks: { callback: v => v.toFixed(1) } }
+          }
+        }
+      });
+
+      // 图2：GVZ 独立走势 + GLD 成交量
+      charts.gvz = new Chart(document.getElementById('gvzChart'), {
+        type: 'line',
+        data: {
+          labels: aligned.map(d => d.date),
+          datasets: [
+            {
+              label: 'GLD 周成交量',
+              data: aligned.map(d => d.gld_volume),
+              type: 'bar',
+              backgroundColor: aligned.map(d => d.gld_volume != null ? (d.gld_volume >= avgGldVol ? '#D4AF37' : '#3a2f10') : 'transparent'),
+              borderColor: aligned.map(d => d.gld_volume != null ? (d.gld_volume >= avgGldVol ? '#D4AF37' : '#3a2f10') : 'transparent'),
+              borderWidth: 1,
+              yAxisID: 'y1',
+              order: 3
+            },
+            {
+              label: 'GVZ',
+              data: aligned.map(d => d.gvz),
+              borderColor: '#6644aa',
+              backgroundColor: 'rgba(167,139,250,0.05)',
+              tension: 0.3,
+              fill: false,
+              pointRadius: 2,
+              pointBackgroundColor: aligned.map(d => d.gvz != null ? (d.gvz >= avgGVZ ? '#a78bfa' : '#6644aa') : 'transparent'),
+              segment: {
+                borderColor: ctx => ctx.p1.parsed.y >= avgGVZ ? '#a78bfa' : '#6644aa'
+              },
+              yAxisID: 'y',
+              order: 1
+            },
+            {
+              label: '均值 ' + avgGVZ.toFixed(1),
+              data: Array(aligned.length).fill(parseFloat(avgGVZ.toFixed(2))),
+              borderColor: '#888',
+              borderDash: [6, 4],
+              borderWidth: 2,
+              pointRadius: 0,
+              fill: false,
+              yAxisID: 'y',
+              order: 2
+            },
+            {
+              label: 'GLD周成交量-中位数-' + fmtAxis(medianGldVol),
+              data: Array(aligned.length).fill(medianGldVol),
+              type: 'line',
+              borderColor: '#f59e0b',
+              borderDash: [6, 4],
+              borderWidth: 2,
+              pointRadius: 0,
+              fill: false,
+              yAxisID: 'y1',
+              order: 2
+            },
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: { legend: { position: 'bottom' } },
+          scales: {
+            y:  { type: 'linear', position: 'left',  ticks: { callback: v => v.toFixed(1) } },
+            y1: { type: 'linear', position: 'right', grid: { drawOnChartArea: false }, ticks: { callback: fmtAxis } }
+          }
         }
       });
     }

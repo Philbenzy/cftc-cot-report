@@ -5,9 +5,10 @@ CFTC COT Report Data Fetcher
 
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 import pandas as pd
 import cot_reports as cot
+import yfinance as yf
 
 
 # 支持的品种配置
@@ -212,6 +213,65 @@ def calculate_summary(records: list) -> dict:
     }
 
 
+def fetch_gvz_data(start_year: int = 2023) -> list:
+    """
+    获取 CBOE Gold ETF Volatility Index (^GVZ) 与 SPDR GLD 成交量数据
+    按周对齐：GVZ 取每周二收盘价，GLD 成交量取当周累计总量
+    """
+    print("\n正在获取 GVZ 与 GLD 成交量数据...")
+    start = f"{start_year}-01-01"
+
+    # 同时下载 GVZ 和 GLD
+    gvz_df = yf.download("^GVZ", start=start, auto_adjust=True, progress=False)
+    gld_df = yf.download("GLD",  start=start, auto_adjust=True, progress=False)
+
+    if gvz_df.empty:
+        print("  警告: GVZ 数据获取失败")
+        return []
+
+    # GVZ 收盘价
+    gvz_close = gvz_df["Close"].squeeze()
+    gvz_close.index = pd.to_datetime(gvz_close.index).tz_localize(None)
+
+    # GLD 成交量，按周二重采样求和（W-TUE：当周三到本周二的累计量）
+    gld_vol = pd.Series(dtype=float)
+    if not gld_df.empty:
+        gld_vol = gld_df["Volume"].squeeze()
+        gld_vol.index = pd.to_datetime(gld_vol.index).tz_localize(None)
+        gld_vol = gld_vol.resample("W-TUE").sum()
+
+    # 生成所有周二日期
+    start_dt = pd.Timestamp(start)
+    end_dt = pd.Timestamp.today()
+    tuesdays = pd.date_range(start=start_dt, end=end_dt, freq="W-TUE")
+
+    records = []
+    for tue in tuesdays:
+        # GVZ：取当天或往前最近交易日
+        window = gvz_close[gvz_close.index <= tue]
+        if window.empty:
+            continue
+        gvz_val = round(float(window.iloc[-1]), 2)
+
+        # GLD 成交量：取当周重采样值
+        gld_val = None
+        if tue in gld_vol.index:
+            gld_val = int(gld_vol[tue])
+        elif not gld_vol.empty:
+            w = gld_vol[gld_vol.index <= tue]
+            if not w.empty:
+                gld_val = int(w.iloc[-1])
+
+        records.append({
+            "date": tue.strftime("%Y-%m-%d"),
+            "close": gvz_val,
+            "gld_volume": gld_val
+        })
+
+    print(f"  成功: {len(records)} 周数据，最新: {records[-1]['date'] if records else 'N/A'}")
+    return records
+
+
 def save_to_json(data: dict, filename: str = "cot_data.json"):
     """
     保存数据为JSON文件
@@ -277,6 +337,10 @@ def main():
 
         except Exception as e:
             print(f"    错误: {e}")
+
+    # 获取 GVZ 数据
+    gvz_records = fetch_gvz_data(start_year=2023)
+    result["gvz"] = gvz_records
 
     # 保存JSON
     print("\n[3/3] 保存数据...")
