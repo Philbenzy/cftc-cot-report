@@ -1,6 +1,8 @@
 """
 CFTC COT Report Data Fetcher
 获取多品种期货COT数据并输出JSON供前端使用
+报告类型：Disaggregated Futures + Options（精细分类报告）
+核心关注：Managed Money（管理基金）持仓 — 对冲基金/CTA/资管机构方向
 """
 
 import json
@@ -66,7 +68,7 @@ OUTPUT_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data")
 
 def fetch_cot_data(years: list = None) -> pd.DataFrame:
     """
-    获取COT Legacy Futures报告数据
+    获取COT Disaggregated Futures + Options报告数据
     """
     if years is None:
         current_year = datetime.now().year
@@ -77,7 +79,7 @@ def fetch_cot_data(years: list = None) -> pd.DataFrame:
     for year in years:
         try:
             print(f"正在获取 {year} 年数据...")
-            df = cot.cot_year(year=year, cot_report_type="legacy_fut")
+            df = cot.cot_year(year=year, cot_report_type="disaggregated_futopt")
             all_data.append(df)
         except Exception as e:
             print(f"获取 {year} 年数据失败: {e}")
@@ -122,7 +124,7 @@ def get_column_value(row, possible_names, default=0):
 def process_commodity_data(df: pd.DataFrame, weeks: int = 52) -> list:
     """
     处理品种数据，返回周度数据列表
-    获取足够多的周数以支持时间范围选择
+    使用 Disaggregated 报告字段：Managed Money / Producer/Merchant
     """
     # 查找日期列 - 优先使用YYYY-MM-DD格式
     date_col = None
@@ -148,46 +150,55 @@ def process_commodity_data(df: pd.DataFrame, weeks: int = 52) -> list:
     df = df.head(weeks).copy()
     df = df.sort_values(date_col, ascending=True)
 
-    # 列名映射
+    # 列名映射（Disaggregated Futures + Options 格式）
     col_map = {
-        'open_interest': ['Open Interest (All)', 'Open_Interest_All'],
-        'noncomm_long': ['Noncommercial Positions-Long (All)', 'NonComm_Positions_Long_All'],
-        'noncomm_short': ['Noncommercial Positions-Short (All)', 'NonComm_Positions_Short_All'],
-        'noncomm_spread': ['Noncommercial Positions-Spreading (All)', 'NonComm_Positions_Spread_All'],
-        'comm_long': ['Commercial Positions-Long (All)', 'Comm_Positions_Long_All'],
-        'comm_short': ['Commercial Positions-Short (All)', 'Comm_Positions_Short_All'],
+        'open_interest': ['Open_Interest_All'],
+        'mm_long':       ['M_Money_Positions_Long_All'],
+        'mm_short':      ['M_Money_Positions_Short_All'],
+        'mm_spread':     ['M_Money_Positions_Spread_All'],
+        'prod_long':     ['Prod_Merc_Positions_Long_All'],
+        'prod_short':    ['Prod_Merc_Positions_Short_All'],
+        'other_long':    ['Other_Rept_Positions_Long_All'],
+        'other_short':   ['Other_Rept_Positions_Short_All'],
     }
 
     records = []
     for _, row in df.iterrows():
-        noncomm_long = get_column_value(row, col_map['noncomm_long'])
-        noncomm_short = get_column_value(row, col_map['noncomm_short'])
-        comm_long = get_column_value(row, col_map['comm_long'])
-        comm_short = get_column_value(row, col_map['comm_short'])
+        mm_long  = get_column_value(row, col_map['mm_long'])
+        mm_short = get_column_value(row, col_map['mm_short'])
+        prod_long  = get_column_value(row, col_map['prod_long'])
+        prod_short = get_column_value(row, col_map['prod_short'])
+        other_long  = get_column_value(row, col_map['other_long'])
+        other_short = get_column_value(row, col_map['other_short'])
 
         record = {
             "date": row[date_col].strftime("%Y-%m-%d"),
-            "noncomm_long": noncomm_long,
-            "noncomm_short": noncomm_short,
-            "noncomm_spreading": get_column_value(row, col_map['noncomm_spread']),
-            "comm_long": comm_long,
-            "comm_short": comm_short,
+            "mm_long":     mm_long,
+            "mm_short":    mm_short,
+            "mm_spreading": get_column_value(row, col_map['mm_spread']),
+            "prod_long":   prod_long,
+            "prod_short":  prod_short,
+            "other_long":  other_long,
+            "other_short": other_short,
             "open_interest": get_column_value(row, col_map['open_interest']),
-            "noncomm_net": noncomm_long - noncomm_short,
-            "comm_net": comm_long - comm_short,
+            "mm_net":    mm_long - mm_short,
+            "prod_net":  prod_long - prod_short,
+            "other_net": other_long - other_short,
         }
         records.append(record)
 
     # 计算周度变化
     for i in range(1, len(records)):
-        records[i]["noncomm_net_change"] = records[i]["noncomm_net"] - records[i-1]["noncomm_net"]
-        records[i]["comm_net_change"] = records[i]["comm_net"] - records[i-1]["comm_net"]
-        records[i]["oi_change"] = records[i]["open_interest"] - records[i-1]["open_interest"]
+        records[i]["mm_net_change"]    = records[i]["mm_net"]    - records[i-1]["mm_net"]
+        records[i]["prod_net_change"]  = records[i]["prod_net"]  - records[i-1]["prod_net"]
+        records[i]["other_net_change"] = records[i]["other_net"] - records[i-1]["other_net"]
+        records[i]["oi_change"]        = records[i]["open_interest"] - records[i-1]["open_interest"]
 
     if records:
-        records[0]["noncomm_net_change"] = 0
-        records[0]["comm_net_change"] = 0
-        records[0]["oi_change"] = 0
+        records[0]["mm_net_change"]    = 0
+        records[0]["prod_net_change"]  = 0
+        records[0]["other_net_change"] = 0
+        records[0]["oi_change"]        = 0
 
     return records
 
@@ -203,13 +214,13 @@ def calculate_summary(records: list) -> dict:
 
     return {
         "latest_date": latest.get("date", ""),
-        "noncomm_net": latest.get("noncomm_net", 0),
-        "comm_net": latest.get("comm_net", 0),
+        "mm_net":      latest.get("mm_net", 0),
+        "prod_net":    latest.get("prod_net", 0),
         "open_interest": latest.get("open_interest", 0),
-        "noncomm_net_change": latest.get("noncomm_net_change", 0),
-        "comm_net_change": latest.get("comm_net_change", 0),
-        "oi_change": latest.get("oi_change", 0),
-        "long_short_ratio": round(latest.get("noncomm_long", 0) / max(latest.get("noncomm_short", 1), 1), 2),
+        "mm_net_change":   latest.get("mm_net_change", 0),
+        "prod_net_change": latest.get("prod_net_change", 0),
+        "oi_change":       latest.get("oi_change", 0),
+        "long_short_ratio": round(latest.get("mm_long", 0) / max(latest.get("mm_short", 1), 1), 2),
     }
 
 
@@ -291,7 +302,7 @@ def main():
     主函数：获取、处理并保存多品种COT数据
     """
     print("=" * 50)
-    print("CFTC COT 多品种数据获取程序")
+    print("CFTC COT 多品种数据获取程序（Disaggregated Futures + Options）")
     print("=" * 50)
 
     # 获取数据
@@ -338,9 +349,27 @@ def main():
         except Exception as e:
             print(f"    错误: {e}")
 
-    # 获取 GVZ 数据
+    # 获取 GVZ 数据（失败时保留旧数据）
     gvz_records = fetch_gvz_data(start_year=2023)
-    result["gvz"] = gvz_records
+    if gvz_records:
+        result["gvz"] = gvz_records
+    else:
+        # 尝试从已有 JSON 中保留旧的 GVZ 数据
+        existing_filepath = os.path.join(OUTPUT_DIR, "cot_data.json")
+        if os.path.exists(existing_filepath):
+            try:
+                with open(existing_filepath, "r", encoding="utf-8") as f:
+                    existing = json.load(f)
+                old_gvz = existing.get("gvz", [])
+                if old_gvz:
+                    result["gvz"] = old_gvz
+                    print(f"  使用旧 GVZ 数据（{len(old_gvz)} 条）")
+                else:
+                    result["gvz"] = []
+            except Exception:
+                result["gvz"] = []
+        else:
+            result["gvz"] = []
 
     # 保存JSON
     print("\n[3/3] 保存数据...")
@@ -356,7 +385,8 @@ def main():
         s = data["summary"]
         print(f"\n{data['name']} ({data['name_en']}):")
         print(f"  最新日期: {s['latest_date']}")
-        print(f"  非商业净持仓: {s['noncomm_net']:,}")
+        print(f"  管理基金净持仓: {s['mm_net']:,}")
+        print(f"  生产商净持仓:   {s['prod_net']:,}")
         print(f"  数据周数: {len(data['weekly_data'])}")
 
 

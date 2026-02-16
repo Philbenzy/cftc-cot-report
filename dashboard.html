@@ -209,10 +209,10 @@
       <div class="chart-container tall"><canvas id="comboChart"></canvas></div>
     </div>
 
-    <!-- 变化率分析 -->
+    <!-- Other Reportable 增减 -->
     <div class="chart-card full">
-      <div class="chart-title" id="title-change">非商业持仓周度变化</div>
-      <div class="chart-subtitle">绿色增仓 / 红色减仓 | 虚线为均值</div>
+      <div class="chart-title" id="title-change">Other Reportable 持仓周度变化</div>
+      <div class="chart-subtitle">绿色增仓 / 红色减仓 | 虚线为均值 | Other Reportable = 除 Managed Money、生产商、Swap Dealer 以外的机构</div>
       <div class="chart-container"><canvas id="changeChart"></canvas></div>
     </div>
 
@@ -298,20 +298,20 @@
 
       // 计算变化率
       const prev = weekly.length > 1 ? weekly[weekly.length - 2] : latest;
-      const noncommPctChg = prev.noncomm_net !== 0 ? ((latest.noncomm_net - prev.noncomm_net) / Math.abs(prev.noncomm_net)) * 100 : 0;
-      const commPctChg = prev.comm_net !== 0 ? ((latest.comm_net - prev.comm_net) / Math.abs(prev.comm_net)) * 100 : 0;
+      const mmPctChg   = prev.mm_net   !== 0 ? ((latest.mm_net   - prev.mm_net)   / Math.abs(prev.mm_net))   * 100 : 0;
+      const prodPctChg = prev.prod_net !== 0 ? ((latest.prod_net - prev.prod_net) / Math.abs(prev.prod_net)) * 100 : 0;
 
       const summary = {
         latest_date: latest.date,
-        noncomm_net: latest.noncomm_net,
-        comm_net: latest.comm_net,
+        mm_net:   latest.mm_net,
+        prod_net: latest.prod_net,
         open_interest: latest.open_interest,
-        noncomm_net_change: latest.noncomm_net_change,
-        comm_net_change: latest.comm_net_change,
+        mm_net_change:   latest.mm_net_change,
+        prod_net_change: latest.prod_net_change,
         oi_change: latest.oi_change,
-        long_short_ratio: (latest.noncomm_long / Math.max(latest.noncomm_short, 1)).toFixed(2),
-        noncomm_pct_change: noncommPctChg,
-        comm_pct_change: commPctChg
+        long_short_ratio: (latest.mm_long / Math.max(latest.mm_short, 1)).toFixed(2),
+        mm_pct_change:   mmPctChg,
+        prod_pct_change: prodPctChg
       };
 
       return { name: commodity.name, name_en: commodity.name_en, summary, weekly_data: weekly };
@@ -336,20 +336,20 @@
       // 更新所有图表标题，加入品种标识
       const tag = `${data.name_en} ${data.name}`;
       document.getElementById('title-combo').textContent     = `${tag} - 净持仓趋势与边际变化`;
-      document.getElementById('title-change').textContent    = `${tag} - 非商业持仓周度变化`;
+      document.getElementById('title-change').textContent    = `${tag} - Other Reportable 持仓周度变化`;
       document.getElementById('title-oi').textContent        = `${tag} - 未平仓合约量`;
-      document.getElementById('title-compare').textContent   = `${tag} - 多空持仓对比（近12周）`;
+      document.getElementById('title-compare').textContent   = `${tag} - 管理基金多空持仓对比（近12周）`;
       document.getElementById('title-table').textContent     = `${tag} - 周度持仓变化明细`;
-      document.getElementById('title-gvz-combo').textContent = `${tag} - GVZ 波动率 vs 非商业净持仓`;
+      document.getElementById('title-gvz-combo').textContent = `${tag} - GVZ 波动率 vs 管理基金净持仓`;
       document.getElementById('title-gvz').textContent       = `${tag} - GVZ 黄金波动率指数`;
     }
 
     function renderMetrics(s) {
       const cards = [
-        { label: '非商业净持仓', value: s.noncomm_net, change: s.noncomm_net_change, pct: s.noncomm_pct_change },
-        { label: '商业净持仓', value: s.comm_net, change: s.comm_net_change, pct: s.comm_pct_change },
+        { label: '管理基金净持仓', value: s.mm_net, change: s.mm_net_change, pct: s.mm_pct_change },
+        { label: '生产商净持仓', value: s.prod_net, change: s.prod_net_change, pct: s.prod_pct_change },
         { label: '未平仓合约', value: s.open_interest, change: s.oi_change },
-        { label: '多空比', value: s.long_short_ratio, isRatio: true }
+        { label: '多空比(MM)', value: s.long_short_ratio, isRatio: true }
       ];
       document.getElementById('metrics').innerHTML = cards.map(c => {
         const vClass = c.isRatio ? '' : c.value > 0 ? ' positive' : c.value < 0 ? ' negative' : '';
@@ -369,15 +369,15 @@
       charts = {};
 
       // 组合图：净持仓趋势 + 边际变化
-      const noncommChanges = weeklyData.map(d => d.noncomm_net_change);
+      const mmChanges = weeklyData.map(d => d.mm_net_change);
       charts.combo = new Chart(document.getElementById('comboChart'), {
         type: 'line',
         data: {
           labels,
           datasets: [
             {
-              label: '非商业净持仓',
-              data: weeklyData.map(d => d.noncomm_net),
+              label: '管理基金净持仓',
+              data: weeklyData.map(d => d.mm_net),
               borderColor: '#D4AF37',
               backgroundColor: 'rgba(212,175,55,0.1)',
               tension: 0.3,
@@ -385,8 +385,8 @@
               order: 1
             },
             {
-              label: '商业净持仓',
-              data: weeklyData.map(d => d.comm_net),
+              label: '生产商净持仓',
+              data: weeklyData.map(d => d.prod_net),
               borderColor: '#3b82f6',
               backgroundColor: 'rgba(59,130,246,0.1)',
               tension: 0.3,
@@ -394,11 +394,11 @@
               order: 2
             },
             {
-              label: '非商业周变化',
-              data: noncommChanges,
+              label: '管理基金周变化',
+              data: mmChanges,
               type: 'bar',
-              backgroundColor: noncommChanges.map(v => v >= 0 ? 'rgba(34,197,94,0.6)' : 'rgba(239,68,68,0.6)'),
-              borderColor: noncommChanges.map(v => v >= 0 ? '#22c55e' : '#ef4444'),
+              backgroundColor: mmChanges.map(v => v >= 0 ? 'rgba(34,197,94,0.6)' : 'rgba(239,68,68,0.6)'),
+              borderColor: mmChanges.map(v => v >= 0 ? '#22c55e' : '#ef4444'),
               borderWidth: 1,
               yAxisID: 'y1',
               order: 3
@@ -417,23 +417,28 @@
         }
       });
 
-      // 周度变化柱状图（带均值线）
-      const avgChange = noncommChanges.reduce((a,b) => a+b, 0) / noncommChanges.length;
+      // Other Reportable 净持仓变化 + 均值线
+      const otherNetChanges = weeklyData.map(d => d.other_net_change ?? 0);
+      const sortedOtherNet = [...otherNetChanges].sort((a, b) => a - b);
+      const midON = Math.floor(sortedOtherNet.length / 2);
+      const medianOtherNet = sortedOtherNet.length % 2 === 0
+        ? (sortedOtherNet[midON - 1] + sortedOtherNet[midON]) / 2
+        : sortedOtherNet[midON];
       charts.change = new Chart(document.getElementById('changeChart'), {
         type: 'bar',
         data: {
           labels,
           datasets: [
             {
-              label: '周度变化',
-              data: noncommChanges,
-              backgroundColor: noncommChanges.map(v => v >= 0 ? 'rgba(34,197,94,0.7)' : 'rgba(239,68,68,0.7)'),
-              borderColor: noncommChanges.map(v => v >= 0 ? '#22c55e' : '#ef4444'),
+              label: '净持仓变化',
+              data: otherNetChanges,
+              backgroundColor: otherNetChanges.map(v => v >= 0 ? 'rgba(212,175,55,0.7)' : 'rgba(239,68,68,0.7)'),
+              borderColor: otherNetChanges.map(v => v >= 0 ? '#D4AF37' : '#ef4444'),
               borderWidth: 1
             },
             {
-              label: '均值',
-              data: Array(labels.length).fill(avgChange),
+              label: '中位数 ' + fmtAxis(Math.round(medianOtherNet)),
+              data: Array(labels.length).fill(medianOtherNet),
               type: 'line',
               borderColor: '#888',
               borderDash: [5, 5],
@@ -446,6 +451,7 @@
         options: {
           responsive: true,
           maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
           plugins: { legend: { position: 'bottom' } },
           scales: { y: { ticks: { callback: fmtAxis } } }
         }
@@ -485,8 +491,8 @@
         const mid = Math.floor(sorted.length / 2);
         return sorted.length % 2 === 0 ? (sorted[mid - 1] + sorted[mid]) / 2 : sorted[mid];
       };
-      const longData = recent.map(d => d.noncomm_long);
-      const shortData = recent.map(d => d.noncomm_short);
+      const longData = recent.map(d => d.mm_long);
+      const shortData = recent.map(d => d.mm_short);
       const medianLong = calcMedian(longData);
       const medianShort = calcMedian(shortData);
 
@@ -495,8 +501,8 @@
         data: {
           labels: recentLabels,
           datasets: [
-            { label: '非商业多头', data: longData, backgroundColor: longData.map(v => v >= medianLong ? '#22c55e' : '#1a3d2b'), order: 2 },
-            { label: '非商业空头', data: shortData, backgroundColor: shortData.map(v => v >= medianShort ? '#ef4444' : '#3d1a1a'), order: 2 },
+            { label: '管理基金多头', data: longData, backgroundColor: longData.map(v => v >= medianLong ? '#22c55e' : '#1a3d2b'), order: 2 },
+            { label: '管理基金空头', data: shortData, backgroundColor: shortData.map(v => v >= medianShort ? '#ef4444' : '#3d1a1a'), order: 2 },
             { label: '多头中位数 ' + fmtAxis(medianLong), data: Array(recentLabels.length).fill(medianLong), type: 'line', borderColor: '#22c55e', borderDash: [8, 4], borderWidth: 2, pointRadius: 0, fill: false, order: 1 },
             { label: '空头中位数 ' + fmtAxis(medianShort), data: Array(recentLabels.length).fill(medianShort), type: 'line', borderColor: '#ef4444', borderDash: [8, 4], borderWidth: 2, pointRadius: 0, fill: false, order: 1 }
           ]
@@ -525,7 +531,7 @@
 
       const aligned = weeklyData.map(d => ({
         date: d.date.slice(5),
-        noncomm_net: d.noncomm_net,
+        mm_net: d.mm_net,
         gvz: gvzMap[d.date] ?? null,
         gld_volume: gldVolMap[d.date] ?? null
       }));
@@ -552,8 +558,8 @@
           labels: aligned.map(d => d.date),
           datasets: [
             {
-              label: '非商业净持仓',
-              data: aligned.map(d => d.noncomm_net),
+              label: '管理基金净持仓',
+              data: aligned.map(d => d.mm_net),
               borderColor: '#D4AF37',
               backgroundColor: 'rgba(212,175,55,0.1)',
               tension: 0.3,
@@ -657,20 +663,20 @@
       document.getElementById('dataTable').innerHTML = `
         <thead><tr>
           <th>日期</th>
-          <th class="num">非商业净持仓</th><th class="num">周变化</th><th class="num">变化率</th>
-          <th class="num">商业净持仓</th><th class="num">周变化</th>
+          <th class="num">管理基金净持仓</th><th class="num">周变化</th><th class="num">变化率</th>
+          <th class="num">生产商净持仓</th><th class="num">周变化</th>
           <th class="num">未平仓合约</th><th class="num">周变化</th>
         </tr></thead>
         <tbody>${rows.map((r, i) => {
           const prev = i < rows.length - 1 ? rows[i + 1] : r;
-          const pctChg = prev.noncomm_net !== 0 ? ((r.noncomm_net - prev.noncomm_net) / Math.abs(prev.noncomm_net)) * 100 : 0;
+          const pctChg = prev.mm_net !== 0 ? ((r.mm_net - prev.mm_net) / Math.abs(prev.mm_net)) * 100 : 0;
           return `<tr>
             <td>${r.date}</td>
-            <td class="num">${fmt(r.noncomm_net)}</td>
-            <td class="num ${r.noncomm_net_change > 0 ? 'pos' : r.noncomm_net_change < 0 ? 'neg' : ''}">${fmtChg(r.noncomm_net_change)}</td>
+            <td class="num">${fmt(r.mm_net)}</td>
+            <td class="num ${r.mm_net_change > 0 ? 'pos' : r.mm_net_change < 0 ? 'neg' : ''}">${fmtChg(r.mm_net_change)}</td>
             <td class="num ${pctChg > 0 ? 'pos' : pctChg < 0 ? 'neg' : ''}">${fmtPct(pctChg)}</td>
-            <td class="num">${fmt(r.comm_net)}</td>
-            <td class="num ${r.comm_net_change > 0 ? 'pos' : r.comm_net_change < 0 ? 'neg' : ''}">${fmtChg(r.comm_net_change)}</td>
+            <td class="num">${fmt(r.prod_net)}</td>
+            <td class="num ${r.prod_net_change > 0 ? 'pos' : r.prod_net_change < 0 ? 'neg' : ''}">${fmtChg(r.prod_net_change)}</td>
             <td class="num">${fmt(r.open_interest)}</td>
             <td class="num ${r.oi_change > 0 ? 'pos' : r.oi_change < 0 ? 'neg' : ''}">${fmtChg(r.oi_change)}</td>
           </tr>`;
@@ -682,21 +688,21 @@
       "commodities": {
         "gold": {
           "name": "黄金", "name_en": "GOLD (COMEX)",
-          "summary": {"latest_date": "2026-02-10", "noncomm_net": 160012, "comm_net": -197738, "open_interest": 404391, "noncomm_net_change": -5592, "comm_net_change": 10040, "oi_change": -5303, "long_short_ratio": 4.03},
+          "summary": {"latest_date": "2026-02-10", "mm_net": 160012, "prod_net": -197738, "open_interest": 404391, "mm_net_change": -5592, "prod_net_change": 10040, "oi_change": -5303, "long_short_ratio": 4.03},
           "weekly_data": [
-            {"date": "2025-11-18", "noncomm_long": 269556, "noncomm_short": 59217, "open_interest": 471953, "noncomm_net": 210339, "comm_net": -245585, "noncomm_net_change": 0, "comm_net_change": 0, "oi_change": 0},
-            {"date": "2025-11-25", "noncomm_long": 253266, "noncomm_short": 48678, "open_interest": 432946, "noncomm_net": 204588, "comm_net": -241403, "noncomm_net_change": -5751, "comm_net_change": 4182, "oi_change": -39007},
-            {"date": "2025-12-02", "noncomm_long": 261331, "noncomm_short": 43771, "open_interest": 418490, "noncomm_net": 217560, "comm_net": -255348, "noncomm_net_change": 12972, "comm_net_change": -13945, "oi_change": -14456},
-            {"date": "2025-12-09", "noncomm_long": 268485, "noncomm_short": 44599, "open_interest": 432569, "noncomm_net": 223886, "comm_net": -262579, "noncomm_net_change": 6326, "comm_net_change": -7231, "oi_change": 14079},
-            {"date": "2025-12-16", "noncomm_long": 280920, "noncomm_short": 46942, "open_interest": 471093, "noncomm_net": 233978, "comm_net": -274358, "noncomm_net_change": 10092, "comm_net_change": -11779, "oi_change": 38524},
-            {"date": "2025-12-23", "noncomm_long": 290161, "noncomm_short": 49461, "open_interest": 492103, "noncomm_net": 240700, "comm_net": -283526, "noncomm_net_change": 6722, "comm_net_change": -9168, "oi_change": 21010},
-            {"date": "2025-12-30", "noncomm_long": 275592, "noncomm_short": 44419, "open_interest": 481866, "noncomm_net": 231173, "comm_net": -275246, "noncomm_net_change": -9527, "comm_net_change": 8280, "oi_change": -10237},
-            {"date": "2026-01-06", "noncomm_long": 274435, "noncomm_short": 46803, "open_interest": 488116, "noncomm_net": 227632, "comm_net": -272035, "noncomm_net_change": -3541, "comm_net_change": 3211, "oi_change": 6250},
-            {"date": "2026-01-13", "noncomm_long": 296183, "noncomm_short": 44945, "open_interest": 527455, "noncomm_net": 251238, "comm_net": -297106, "noncomm_net_change": 23606, "comm_net_change": -25071, "oi_change": 39339},
-            {"date": "2026-01-20", "noncomm_long": 295772, "noncomm_short": 51002, "open_interest": 528004, "noncomm_net": 244770, "comm_net": -289689, "noncomm_net_change": -6468, "comm_net_change": 7417, "oi_change": 549},
-            {"date": "2026-01-27", "noncomm_long": 252100, "noncomm_short": 46704, "open_interest": 488463, "noncomm_net": 205396, "comm_net": -248285, "noncomm_net_change": -39374, "comm_net_change": 41404, "oi_change": -39541},
-            {"date": "2026-02-03", "noncomm_long": 214508, "noncomm_short": 48904, "open_interest": 409694, "noncomm_net": 165604, "comm_net": -207778, "noncomm_net_change": -39792, "comm_net_change": 40507, "oi_change": -78769},
-            {"date": "2026-02-10", "noncomm_long": 212808, "noncomm_short": 52796, "open_interest": 404391, "noncomm_net": 160012, "comm_net": -197738, "noncomm_net_change": -5592, "comm_net_change": 10040, "oi_change": -5303}
+            {"date": "2025-11-18", "mm_long": 269556, "mm_short": 59217, "open_interest": 471953, "mm_net": 210339, "prod_net": -245585, "mm_net_change": 0, "prod_net_change": 0, "oi_change": 0},
+            {"date": "2025-11-25", "mm_long": 253266, "mm_short": 48678, "open_interest": 432946, "mm_net": 204588, "prod_net": -241403, "mm_net_change": -5751, "prod_net_change": 4182, "oi_change": -39007},
+            {"date": "2025-12-02", "mm_long": 261331, "mm_short": 43771, "open_interest": 418490, "mm_net": 217560, "prod_net": -255348, "mm_net_change": 12972, "prod_net_change": -13945, "oi_change": -14456},
+            {"date": "2025-12-09", "mm_long": 268485, "mm_short": 44599, "open_interest": 432569, "mm_net": 223886, "prod_net": -262579, "mm_net_change": 6326, "prod_net_change": -7231, "oi_change": 14079},
+            {"date": "2025-12-16", "mm_long": 280920, "mm_short": 46942, "open_interest": 471093, "mm_net": 233978, "prod_net": -274358, "mm_net_change": 10092, "prod_net_change": -11779, "oi_change": 38524},
+            {"date": "2025-12-23", "mm_long": 290161, "mm_short": 49461, "open_interest": 492103, "mm_net": 240700, "prod_net": -283526, "mm_net_change": 6722, "prod_net_change": -9168, "oi_change": 21010},
+            {"date": "2025-12-30", "mm_long": 275592, "mm_short": 44419, "open_interest": 481866, "mm_net": 231173, "prod_net": -275246, "mm_net_change": -9527, "prod_net_change": 8280, "oi_change": -10237},
+            {"date": "2026-01-06", "mm_long": 274435, "mm_short": 46803, "open_interest": 488116, "mm_net": 227632, "prod_net": -272035, "mm_net_change": -3541, "prod_net_change": 3211, "oi_change": 6250},
+            {"date": "2026-01-13", "mm_long": 296183, "mm_short": 44945, "open_interest": 527455, "mm_net": 251238, "prod_net": -297106, "mm_net_change": 23606, "prod_net_change": -25071, "oi_change": 39339},
+            {"date": "2026-01-20", "mm_long": 295772, "mm_short": 51002, "open_interest": 528004, "mm_net": 244770, "prod_net": -289689, "mm_net_change": -6468, "prod_net_change": 7417, "oi_change": 549},
+            {"date": "2026-01-27", "mm_long": 252100, "mm_short": 46704, "open_interest": 488463, "mm_net": 205396, "prod_net": -248285, "mm_net_change": -39374, "prod_net_change": 41404, "oi_change": -39541},
+            {"date": "2026-02-03", "mm_long": 214508, "mm_short": 48904, "open_interest": 409694, "mm_net": 165604, "prod_net": -207778, "mm_net_change": -39792, "prod_net_change": 40507, "oi_change": -78769},
+            {"date": "2026-02-10", "mm_long": 212808, "mm_short": 52796, "open_interest": 404391, "mm_net": 160012, "prod_net": -197738, "mm_net_change": -5592, "prod_net_change": 10040, "oi_change": -5303}
           ]
         }
       },
