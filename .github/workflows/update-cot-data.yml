@@ -1,0 +1,37 @@
+name: Update COT Data
+
+on:
+  schedule:
+    # 每周五 23:00 UTC（CFTC 约 20:30 UTC 发布，留 2.5 小时缓冲）
+    - cron: '0 23 * * 5'
+  workflow_dispatch:
+    # 支持手动触发（GitHub 仓库页面 → Actions → Run workflow）
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r backend/requirements.txt
+
+      - name: Fetch latest COT data
+        run: python backend/cftc_data_fetcher.py
+
+      - name: Commit and push if data changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/cot_data.json
+          git diff --staged --quiet && echo "No changes" || (
+            git commit -m "chore: auto-update COT data $(date -u +%Y-%m-%d)" &&
+            git push
+          )
