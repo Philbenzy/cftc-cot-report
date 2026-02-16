@@ -84,7 +84,7 @@ python cftc_data_fetcher.py
 
 ### COT 报告类型
 
-本项目使用 **Legacy Futures** 报告，包含：
+本项目使用 **Disaggregated** 报告，包含：
 
 | 类别 | 说明 |
 |------|------|
