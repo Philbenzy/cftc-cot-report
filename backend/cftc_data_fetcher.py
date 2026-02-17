@@ -59,6 +59,16 @@ COMMODITIES = {
         "name": "氢氧化锂",
         "name_en": "LITHIUM HYDROXIDE (COMEX)",
         "pattern": r"^LITHIUM HYDROXIDE - COMMODITY EXCHANGE"
+    },
+    "wti": {
+        "name": "WTI原油",
+        "name_en": "WTI CRUDE OIL (NYMEX)",
+        "pattern": r"^WTI-PHYSICAL - NEW YORK MERCANTILE"
+    },
+    "palm_oil": {
+        "name": "棕榈油",
+        "name_en": "PALM OIL (CME)",
+        "pattern": r"^USD Malaysian Crude Palm Oil"
     }
 }
 
