@@ -5,6 +5,7 @@ Thumbs.db
 # 临时数据文件
 annual.txt
 c_year.txt
+FinComYY.txt
 *.xlsx
 
 # 调试文件
