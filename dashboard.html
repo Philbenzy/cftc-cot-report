@@ -88,6 +88,21 @@
     .time-btn:hover { border-color: var(--gold-dark); color: var(--text); }
     .time-btn.active { background: var(--gold); border-color: var(--gold); color: #000; font-weight: 600; }
 
+    .mode-buttons { display: flex; gap: 8px; }
+    .mode-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-muted);
+      padding: 10px 20px;
+      font-family: inherit;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .mode-btn:hover { border-color: var(--blue); color: var(--text); }
+    .mode-btn.active { background: var(--blue); border-color: var(--blue); color: #fff; font-weight: 600; }
+
     /* Header */
     .header {
       display: flex;
@@ -175,6 +190,13 @@
   <!-- 控制栏 -->
   <div class="controls">
     <div class="control-group">
+      <span class="control-label">报告类型</span>
+      <div class="mode-buttons">
+        <button class="mode-btn active" data-mode="cot">商品 COT</button>
+        <button class="mode-btn" data-mode="tff">外汇 & 加密 TFF</button>
+      </div>
+    </div>
+    <div class="control-group">
       <span class="control-label">品种</span>
       <div class="select-wrapper">
         <select id="commoditySelect"></select>
@@ -209,10 +231,10 @@
       <div class="chart-container tall"><canvas id="comboChart"></canvas></div>
     </div>
 
-    <!-- Other Reportable 增减 -->
+    <!-- Other Reportable / 交易商 增减 -->
     <div class="chart-card full">
       <div class="chart-title" id="title-change">Other Reportable 持仓周度变化</div>
-      <div class="chart-subtitle">绿色增仓 / 红色减仓 | 虚线为均值 | Other Reportable = 除 Managed Money、生产商、Swap Dealer 以外的机构</div>
+      <div class="chart-subtitle" id="subtitle-change">绿色增仓 / 红色减仓 | 虚线为中位数 | Other Reportable = 除 Managed Money、生产商、Swap Dealer 以外的机构</div>
       <div class="chart-container"><canvas id="changeChart"></canvas></div>
     </div>
 
@@ -247,7 +269,18 @@
     let ALL_DATA = null;
     let currentCommodity = 'gold';
     let currentWeeks = 52;
+    let currentMode = 'cot'; // 'cot' | 'tff'
     let charts = {};
+
+    function getLabels() {
+      return currentMode === 'tff' ? {
+        mm: '杠杆资金', prod: '资产管理', other: '交易商',
+        mmRatio: 'LF', reportName: 'TFF Report', reportDesc: 'Traders in Financial Futures'
+      } : {
+        mm: '管理基金', prod: '生产商', other: 'Other Reportable',
+        mmRatio: 'MM', reportName: 'COT Report', reportDesc: 'Commitments of Traders'
+      };
+    }
 
     const fmt = n => n == null ? '-' : n.toLocaleString();
     const fmtChg = n => n == null ? '-' : (n > 0 ? '+' : '') + n.toLocaleString();
@@ -272,11 +305,9 @@
     }
 
     function initUI() {
+      rebuildSelect();
+
       const select = document.getElementById('commoditySelect');
-      select.innerHTML = ALL_DATA.commodity_list.map(c =>
-        `<option value="${c.code}">${c.name} (${c.name_en})</option>`
-      ).join('');
-      select.value = currentCommodity;
       select.addEventListener('change', e => { currentCommodity = e.target.value; render(); });
 
       document.querySelectorAll('.time-btn').forEach(btn => {
@@ -287,10 +318,37 @@
           render();
         });
       });
+
+      document.querySelectorAll('.mode-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentMode = btn.dataset.mode;
+          // 切换模式时重置到该模式第一个品种
+          const list = currentMode === 'tff'
+            ? ALL_DATA.tff_instrument_list
+            : ALL_DATA.commodity_list;
+          currentCommodity = list.length ? list[0].code : '';
+          rebuildSelect();
+          render();
+        });
+      });
+    }
+
+    function rebuildSelect() {
+      const list = currentMode === 'tff'
+        ? (ALL_DATA.tff_instrument_list || [])
+        : ALL_DATA.commodity_list;
+      const select = document.getElementById('commoditySelect');
+      select.innerHTML = list.map(c =>
+        `<option value="${c.code}">${c.name} (${c.name_en})</option>`
+      ).join('');
+      select.value = currentCommodity;
     }
 
     function getCurrentData() {
-      const commodity = ALL_DATA.commodities[currentCommodity];
+      const source = currentMode === 'tff' ? ALL_DATA.tff_instruments : ALL_DATA.commodities;
+      const commodity = source ? source[currentCommodity] : null;
       if (!commodity) return null;
 
       const weekly = commodity.weekly_data.slice(-currentWeeks);
@@ -328,28 +386,35 @@
     }
 
     function renderHeader(data) {
-      document.getElementById('pageTitle').textContent = `CFTC COT Report - ${data.name_en}`;
+      const L = getLabels();
+      document.getElementById('pageTitle').textContent = `CFTC ${L.reportName} - ${data.name_en}`;
       const timeText = currentWeeks === 13 ? '3个月' : currentWeeks === 26 ? '6个月' : currentWeeks === 52 ? '1年' : '3年';
-      document.getElementById('pageSubtitle').textContent = `Commitments of Traders | 近${timeText}持仓数据分析`;
+      document.getElementById('pageSubtitle').textContent = `${L.reportDesc} | 近${timeText}持仓数据分析`;
       document.getElementById('updateTime').innerHTML = `<div>最新数据: ${data.summary.latest_date}</div><div>更新时间: ${ALL_DATA.updated_at}</div>`;
 
       // 更新所有图表标题，加入品种标识
       const tag = `${data.name_en} ${data.name}`;
       document.getElementById('title-combo').textContent     = `${tag} - 净持仓趋势与边际变化`;
-      document.getElementById('title-change').textContent    = `${tag} - Other Reportable 持仓周度变化`;
+      document.getElementById('title-change').textContent    = `${tag} - ${L.other} 持仓周度变化`;
       document.getElementById('title-oi').textContent        = `${tag} - 未平仓合约量`;
-      document.getElementById('title-compare').textContent   = `${tag} - 管理基金多空持仓对比（近12周）`;
+      document.getElementById('title-compare').textContent   = `${tag} - ${L.mm}多空持仓对比（近12周）`;
       document.getElementById('title-table').textContent     = `${tag} - 周度持仓变化明细`;
-      document.getElementById('title-gvz-combo').textContent = `${tag} - GVZ 波动率 vs 管理基金净持仓`;
+      document.getElementById('title-gvz-combo').textContent = `${tag} - GVZ 波动率 vs ${L.mm}净持仓`;
       document.getElementById('title-gvz').textContent       = `${tag} - GVZ 黄金波动率指数`;
+
+      const changeSubtitle = currentMode === 'tff'
+        ? '绿色增仓 / 红色减仓 | 虚线为中位数 | 交易商 = Dealer/Intermediary（做市商）'
+        : '绿色增仓 / 红色减仓 | 虚线为中位数 | Other Reportable = 除 Managed Money、生产商、Swap Dealer 以外的机构';
+      document.getElementById('subtitle-change').textContent = changeSubtitle;
     }
 
     function renderMetrics(s) {
+      const L = getLabels();
       const cards = [
-        { label: '管理基金净持仓', value: s.mm_net, change: s.mm_net_change, pct: s.mm_pct_change },
-        { label: '生产商净持仓', value: s.prod_net, change: s.prod_net_change, pct: s.prod_pct_change },
+        { label: `${L.mm}净持仓`, value: s.mm_net, change: s.mm_net_change, pct: s.mm_pct_change },
+        { label: `${L.prod}净持仓`, value: s.prod_net, change: s.prod_net_change, pct: s.prod_pct_change },
         { label: '未平仓合约', value: s.open_interest, change: s.oi_change },
-        { label: '多空比(MM)', value: s.long_short_ratio, isRatio: true }
+        { label: `多空比(${L.mmRatio})`, value: s.long_short_ratio, isRatio: true }
       ];
       document.getElementById('metrics').innerHTML = cards.map(c => {
         const vClass = c.isRatio ? '' : c.value > 0 ? ' positive' : c.value < 0 ? ' negative' : '';
@@ -367,6 +432,7 @@
       const labels = weeklyData.map(d => d.date.slice(5));
       Object.values(charts).forEach(c => c.destroy());
       charts = {};
+      const L = getLabels();
 
       // 组合图：净持仓趋势 + 边际变化
       const mmChanges = weeklyData.map(d => d.mm_net_change);
@@ -376,7 +442,7 @@
           labels,
           datasets: [
             {
-              label: '管理基金净持仓',
+              label: `${L.mm}净持仓`,
               data: weeklyData.map(d => d.mm_net),
               borderColor: '#D4AF37',
               backgroundColor: 'rgba(212,175,55,0.1)',
@@ -385,7 +451,7 @@
               order: 1
             },
             {
-              label: '生产商净持仓',
+              label: `${L.prod}净持仓`,
               data: weeklyData.map(d => d.prod_net),
               borderColor: '#3b82f6',
               backgroundColor: 'rgba(59,130,246,0.1)',
@@ -394,7 +460,7 @@
               order: 2
             },
             {
-              label: '管理基金周变化',
+              label: `${L.mm}周变化`,
               data: mmChanges,
               type: 'bar',
               backgroundColor: mmChanges.map(v => v >= 0 ? 'rgba(34,197,94,0.6)' : 'rgba(239,68,68,0.6)'),
@@ -411,19 +477,15 @@
           interaction: { mode: 'index', intersect: false },
           plugins: { legend: { position: 'bottom' } },
           scales: {
-            y: { type: 'linear', position: 'left', ticks: { callback: fmtAxis } },
-            y1: { type: 'linear', position: 'right', grid: { drawOnChartArea: false }, ticks: { callback: fmtAxis } }
+            x: { offset: true },
+            y:  { type: 'linear', position: 'left',  ticks: { callback: fmtAxis }, afterFit: s => { s.width  = 62; } },
+            y1: { type: 'linear', position: 'right', ticks: { callback: fmtAxis }, grid: { drawOnChartArea: false }, afterFit: s => { s.width = 52; } }
           }
         }
       });
 
-      // Other Reportable 净持仓变化 + 均值线
+      // Other Reportable 净持仓变化
       const otherNetChanges = weeklyData.map(d => d.other_net_change ?? 0);
-      const sortedOtherNet = [...otherNetChanges].sort((a, b) => a - b);
-      const midON = Math.floor(sortedOtherNet.length / 2);
-      const medianOtherNet = sortedOtherNet.length % 2 === 0
-        ? (sortedOtherNet[midON - 1] + sortedOtherNet[midON]) / 2
-        : sortedOtherNet[midON];
       charts.change = new Chart(document.getElementById('changeChart'), {
         type: 'bar',
         data: {
@@ -435,16 +497,6 @@
               backgroundColor: otherNetChanges.map(v => v >= 0 ? 'rgba(212,175,55,0.7)' : 'rgba(239,68,68,0.7)'),
               borderColor: otherNetChanges.map(v => v >= 0 ? '#D4AF37' : '#ef4444'),
               borderWidth: 1
-            },
-            {
-              label: '中位数 ' + fmtAxis(Math.round(medianOtherNet)),
-              data: Array(labels.length).fill(medianOtherNet),
-              type: 'line',
-              borderColor: '#888',
-              borderDash: [5, 5],
-              borderWidth: 2,
-              pointRadius: 0,
-              fill: false
             }
           ]
         },
@@ -453,7 +505,10 @@
           maintainAspectRatio: false,
           interaction: { mode: 'index', intersect: false },
           plugins: { legend: { position: 'bottom' } },
-          scales: { y: { ticks: { callback: fmtAxis } } }
+          scales: {
+            y:  { ticks: { callback: fmtAxis }, afterFit: s => { s.width = 62; } },
+            y1: { type: 'linear', position: 'right', ticks: { display: false }, grid: { display: false }, border: { display: false }, afterFit: s => { s.width = 52; } }
+          }
         }
       });
 
@@ -470,7 +525,7 @@
           labels,
           datasets: [
             { label: '未平仓合约', data: oiData, backgroundColor: oiData.map(v => v >= medianOI ? '#FFD700' : '#5c4a1f'), order: 2 },
-            { label: '中位数 ' + fmtAxis(medianOI), data: Array(labels.length).fill(medianOI), type: 'line', borderColor: '#ef4444', borderDash: [8, 4], borderWidth: 3, pointRadius: 0, fill: false, order: 1 }
+            { label: '中位数 ' + fmtAxis(medianOI), data: Array(labels.length).fill(medianOI), type: 'line', borderColor: '#FFD700', borderDash: [8, 4], borderWidth: 3, pointRadius: 0, fill: false, order: 1 }
           ]
         },
         options: {
@@ -501,8 +556,8 @@
         data: {
           labels: recentLabels,
           datasets: [
-            { label: '管理基金多头', data: longData, backgroundColor: longData.map(v => v >= medianLong ? '#22c55e' : '#1a3d2b'), order: 2 },
-            { label: '管理基金空头', data: shortData, backgroundColor: shortData.map(v => v >= medianShort ? '#ef4444' : '#3d1a1a'), order: 2 },
+            { label: `${L.mm}多头`, data: longData, backgroundColor: longData.map(v => v >= medianLong ? '#22c55e' : '#1a3d2b'), order: 2 },
+            { label: `${L.mm}空头`, data: shortData, backgroundColor: shortData.map(v => v >= medianShort ? '#ef4444' : '#3d1a1a'), order: 2 },
             { label: '多头中位数 ' + fmtAxis(medianLong), data: Array(recentLabels.length).fill(medianLong), type: 'line', borderColor: '#22c55e', borderDash: [8, 4], borderWidth: 2, pointRadius: 0, fill: false, order: 1 },
             { label: '空头中位数 ' + fmtAxis(medianShort), data: Array(recentLabels.length).fill(medianShort), type: 'line', borderColor: '#ef4444', borderDash: [8, 4], borderWidth: 2, pointRadius: 0, fill: false, order: 1 }
           ]
@@ -517,7 +572,7 @@
     }
 
     function renderGVZ(weeklyData) {
-      const isGold = currentCommodity === 'gold' || currentCommodity === 'micro_gold';
+      const isGold = currentMode === 'cot' && (currentCommodity === 'gold' || currentCommodity === 'micro_gold');
       document.getElementById('gvzComboCard').style.display = isGold ? '' : 'none';
       document.getElementById('gvzCard').style.display = isGold ? '' : 'none';
       if (!isGold || !ALL_DATA.gvz || !ALL_DATA.gvz.length) return;
@@ -551,6 +606,7 @@
       if (charts.gvzCombo) charts.gvzCombo.destroy();
       if (charts.gvz) charts.gvz.destroy();
 
+      const L = getLabels();
       // 图1：GVZ vs 净持仓双轴
       charts.gvzCombo = new Chart(document.getElementById('gvzComboChart'), {
         type: 'line',
@@ -558,7 +614,7 @@
           labels: aligned.map(d => d.date),
           datasets: [
             {
-              label: '管理基金净持仓',
+              label: `${L.mm}净持仓`,
               data: aligned.map(d => d.mm_net),
               borderColor: '#D4AF37',
               backgroundColor: 'rgba(212,175,55,0.1)',
@@ -583,6 +639,7 @@
           interaction: { mode: 'index', intersect: false },
           plugins: { legend: { position: 'bottom' } },
           scales: {
+            x: { offset: true },
             y:  { type: 'linear', position: 'left',  ticks: { callback: fmtAxis } },
             y1: { type: 'linear', position: 'right', grid: { drawOnChartArea: false }, ticks: { callback: v => v.toFixed(1) } }
           }
@@ -660,11 +717,12 @@
 
     function renderTable(weeklyData) {
       const rows = [...weeklyData].reverse();
+      const L = getLabels();
       document.getElementById('dataTable').innerHTML = `
         <thead><tr>
           <th>日期</th>
-          <th class="num">管理基金净持仓</th><th class="num">周变化</th><th class="num">变化率</th>
-          <th class="num">生产商净持仓</th><th class="num">周变化</th>
+          <th class="num">${L.mm}净持仓</th><th class="num">周变化</th><th class="num">变化率</th>
+          <th class="num">${L.prod}净持仓</th><th class="num">周变化</th>
           <th class="num">未平仓合约</th><th class="num">周变化</th>
         </tr></thead>
         <tbody>${rows.map((r, i) => {
@@ -685,6 +743,8 @@
 
     const FALLBACK_DATA = {
       "commodity_list": [{"code": "gold", "name": "黄金", "name_en": "GOLD (COMEX)"}],
+      "tff_instrument_list": [],
+      "tff_instruments": {},
       "commodities": {
         "gold": {
           "name": "黄金", "name_en": "GOLD (COMEX)",
