@@ -270,6 +270,23 @@
       <div class="chart-subtitle">最近季度合约（M1Q）价格 − 第三季度合约（M3Q）价格 | 绿色（正值）= Backwardation，近月溢价，通常反映库存偏紧 | 红色（负值）= Contango，远月溢价 | 悬停查看具体合约代码</div>
       <div class="chart-container"><canvas id="copperSpreadChart"></canvas></div>
     </div>
+
+    <!-- 沪铜 SHFE 数据：仅铜品种显示 -->
+    <div class="chart-card full copper-only" id="shfeCurveCard" style="display:none">
+      <div class="chart-title">沪铜（SHFE）- 期货曲线（当前快照）</div>
+      <div class="chart-subtitle">各月合约最新收盘价 | 单位：元/吨 | 曲线向上 = Contango（近月贴水）| 向下 = Backwardation（近月升水，供应偏紧）</div>
+      <div class="chart-container"><canvas id="shfeCurveChart"></canvas></div>
+    </div>
+    <div class="chart-card full copper-only" id="shfeSpreadCard" style="display:none">
+      <div class="chart-title">沪铜（SHFE）- 季度合约期限结构价差历史</div>
+      <div class="chart-subtitle">最近季度合约（M1Q）− 第三季度合约（M3Q）| 绿色（正值）= Backwardation | 红色（负值）= Contango | 单位：元/吨 | 悬停查看具体合约代码</div>
+      <div class="chart-container"><canvas id="shfeSpreadChart"></canvas></div>
+    </div>
+    <div class="chart-card full copper-only" id="shfeInventoryCard" style="display:none">
+      <div class="chart-title">沪铜（SHFE）- 注册仓单量</div>
+      <div class="chart-subtitle">SHFE 铜注册仓单总量（每周五更新）| 单位：吨 | 柱色深浅反映相对中位数高低 | 数据从首次运行起逐周积累</div>
+      <div class="chart-container"><canvas id="shfeInventoryChart"></canvas></div>
+    </div>
   </div>
 
   <div class="table-card">
@@ -397,6 +414,7 @@
       renderCharts(data.weekly_data);
       renderGVZ(data.weekly_data);
       renderCopperCurve();
+      renderSHFECopper();
       renderTable(data.weekly_data);
     }
 
@@ -833,6 +851,143 @@
       }
     }
 
+    function renderSHFECopper() {
+      const isCopper = currentMode === 'cot' && currentCommodity === 'copper';
+      ['shfeCurveCard','shfeSpreadCard','shfeInventoryCard'].forEach(id => {
+        document.getElementById(id).style.display = isCopper ? '' : 'none';
+      });
+      if (!isCopper) return;
+
+      if (charts.shfeCurve)     charts.shfeCurve.destroy();
+      if (charts.shfeSpread)    charts.shfeSpread.destroy();
+      if (charts.shfeInventory) charts.shfeInventory.destroy();
+
+      const shfe    = ALL_DATA.shfe_copper || {};
+      const snap    = shfe.snapshot         || [];
+      const spreads = (shfe.spread_history  || []).slice(-currentWeeks);
+      const inv     = (shfe.inventory_history || []).slice(-currentWeeks);
+
+      const fmtM = m => {
+        const mo = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        const [y, mn] = m.split('-');
+        return `${mo[parseInt(mn)-1]}'${y.slice(2)}`;
+      };
+
+      // 图1：沪铜期货曲线快照
+      if (snap.length) {
+        charts.shfeCurve = new Chart(document.getElementById('shfeCurveChart'), {
+          type: 'line',
+          data: {
+            labels: snap.map(d => fmtM(d.month)),
+            datasets: [{
+              label: '沪铜期货价格 (CNY/吨)',
+              data: snap.map(d => d.price),
+              borderColor: '#e07b39',
+              backgroundColor: 'rgba(224,123,57,0.12)',
+              tension: 0.2, pointRadius: 5, pointHoverRadius: 7, fill: true
+            }]
+          },
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: { legend: { position: 'bottom' } },
+            scales: { y: { ticks: { callback: v => '¥' + v.toLocaleString() } } }
+          }
+        });
+      }
+
+      // 图2：季度价差历史
+      if (spreads.length) {
+        const sv = spreads.map(d => d.spread);
+        charts.shfeSpread = new Chart(document.getElementById('shfeSpreadChart'), {
+          type: 'bar',
+          data: {
+            labels: spreads.map(d => d.date.slice(5)),
+            datasets: [
+              {
+                label: 'M1Q-M3Q 价差 (CNY/吨)',
+                data: sv,
+                backgroundColor: sv.map(v => v > 0 ? 'rgba(34,197,94,0.7)' : 'rgba(239,68,68,0.7)'),
+                borderColor:     sv.map(v => v > 0 ? '#22c55e' : '#ef4444'),
+                borderWidth: 1
+              },
+              {
+                label: '零线', data: Array(spreads.length).fill(0),
+                type: 'line', borderColor: '#555', borderDash: [5,5],
+                borderWidth: 1.5, pointRadius: 0, fill: false
+              }
+            ]
+          },
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+              legend: { position: 'bottom' },
+              tooltip: {
+                callbacks: {
+                  label: ctx => {
+                    if (ctx.dataset.label === '零线') return null;
+                    const d = spreads[ctx.dataIndex];
+                    return [
+                      `M1Q-M3Q: ${d.spread >= 0 ? '+' : ''}${d.spread.toLocaleString()} CNY/吨`,
+                      `M1Q (${d.m1_contract}): ¥${d.m1_price.toLocaleString()}`,
+                      `M3Q (${d.m3_contract}): ¥${d.m3_price.toLocaleString()}`
+                    ];
+                  }
+                }
+              }
+            },
+            scales: { y: { ticks: { callback: v => (v >= 0 ? '+' : '') + v.toLocaleString() } } }
+          }
+        });
+      }
+
+      // 图3：注册仓单量历史
+      if (inv.length) {
+        const totals  = inv.map(d => d.total);
+        const median  = [...totals].sort((a,b)=>a-b)[Math.floor(totals.length/2)];
+        charts.shfeInventory = new Chart(document.getElementById('shfeInventoryChart'), {
+          type: 'bar',
+          data: {
+            labels: inv.map(d => d.date.slice(5)),
+            datasets: [
+              {
+                label: '注册仓单量 (吨)',
+                data: totals,
+                backgroundColor: totals.map(v => v >= median ? 'rgba(234,179,8,0.75)' : 'rgba(234,179,8,0.35)'),
+                borderColor: 'rgba(234,179,8,0.9)', borderWidth: 1
+              },
+              {
+                label: '中位数',
+                data: Array(inv.length).fill(median),
+                type: 'line', borderColor: '#FFD700', borderDash: [5,5],
+                borderWidth: 1.5, pointRadius: 0, fill: false
+              }
+            ]
+          },
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: { legend: { position: 'bottom' },
+              tooltip: {
+                callbacks: {
+                  label: ctx => {
+                    if (ctx.dataset.label === '中位数') return null;
+                    const d = inv[ctx.dataIndex];
+                    return [
+                      `仓单总量: ${d.total.toLocaleString()} 吨`,
+                      `周变化: ${d.change >= 0 ? '+' : ''}${d.change.toLocaleString()} 吨`
+                    ];
+                  }
+                }
+              }
+            },
+            scales: { y: { ticks: { callback: v => v.toLocaleString() + 't' } } }
+          }
+        });
+      }
+    }
+
     function renderTable(weeklyData) {
       const rows = [...weeklyData].reverse();
       const L = getLabels();
@@ -864,6 +1019,7 @@
       "tff_instrument_list": [],
       "tff_instruments": {},
       "copper_curve": {"snapshot": [], "spread_history": []},
+      "shfe_copper":  {"snapshot": [], "spread_history": [], "inventory_history": []},
       "commodities": {
         "gold": {
           "name": "黄金", "name_en": "GOLD (COMEX)",

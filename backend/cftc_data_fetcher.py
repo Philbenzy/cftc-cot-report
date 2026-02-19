@@ -14,6 +14,7 @@ import pandas as pd
 import requests
 import cot_reports as cot
 import yfinance as yf
+import akshare as ak
 
 
 # ── COT Disaggregated 商品品种配置 ───────────────────────────────────────────
@@ -455,6 +456,170 @@ def fetch_copper_curve_data(weeks: int = 156) -> dict:
     return {"snapshot": snapshot, "spread_history": spread_history}
 
 
+def fetch_shfe_copper_data(existing_inventory: list = None) -> dict:
+    """
+    获取上海期货交易所（SHFE）沪铜期货数据：
+    - snapshot       ：当前活跃合约价格快照（期货曲线），单位 CNY/吨
+    - spread_history ：季度合约（3/6/9/12月）近远月价差历史
+      AKShare 可访问已到期 SHFE 合约，追溯至约 3 年前
+    - inventory_history：SHFE 铜注册仓单量，每周追加一条（首次运行起积累）
+    """
+    print("\n正在获取沪铜（SHFE）期货数据...")
+    today = datetime.now()
+    if existing_inventory is None:
+        existing_inventory = []
+
+    # ── 1. 快照：当前活跃沪铜合约价格（使用 Sina 接口，更稳定）──────────────
+    # SHFE 铜以每月 15 日为保守到期日，逐个下载 M1-M12 的最新收盘价
+    snapshot = []
+    snapshot_codes = []
+    y, m = today.year, today.month
+    for _ in range(14):
+        expiry = datetime(y, m, 15)
+        if expiry > today and len(snapshot_codes) < 12:
+            snapshot_codes.append({
+                "code":  f"CU{str(y)[-2:]}{m:02d}",
+                "month": f"{y}-{m:02d}",
+            })
+        y, m = _next_month(y, m)
+
+    for item in snapshot_codes:
+        try:
+            df = ak.futures_zh_daily_sina(symbol=item['code'])
+            if df is not None and not df.empty:
+                price = float(df['close'].iloc[-1])
+                if price > 0:
+                    snapshot.append({
+                        "month":    item['month'],
+                        "price":    price,
+                        "contract": item['code']
+                    })
+        except Exception:
+            pass
+    snapshot.sort(key=lambda x: x['month'])
+    print(f"  快照: {len(snapshot)} 个合约")
+
+    # ── 2. 季度价差历史 ────────────────────────────────────────────────────────
+    # 季度月：3, 6, 9, 12；AKShare 可访问已到期合约，约追溯 3 年
+    quarterly_meta = []
+    start_yr = today.year - 3
+    end_dt   = today + timedelta(days=400)
+    y = start_yr
+    while True:
+        for qm in [3, 6, 9, 12]:
+            dt = datetime(y, qm, 1)
+            if dt < datetime(start_yr, 1, 1) or dt > end_dt:
+                continue
+            quarterly_meta.append({
+                "code":     f"CU{str(y)[-2:]}{qm:02d}",
+                "delivery": dt
+            })
+        y += 1
+        if y > today.year + 2:
+            break
+
+    print(f"  下载 {len(quarterly_meta)} 个季度合约历史...")
+    price_cache = {}
+    for q in quarterly_meta:
+        try:
+            df = ak.futures_zh_daily_sina(symbol=q['code'])
+            if df is not None and not df.empty:
+                df['date'] = pd.to_datetime(df['date'])
+                price_cache[q['code']] = {
+                    "series":    df.set_index('date')['close'],
+                    "last_date": pd.Timestamp(df['date'].max()),
+                    "delivery":  q['delivery']
+                }
+        except Exception:
+            pass
+    print(f"  成功获取 {len(price_cache)} 个合约数据")
+
+    spread_history = []
+    if len(price_cache) >= 2:
+        fridays = pd.date_range(
+            start=pd.Timestamp(start_yr, 1, 1),
+            end=pd.Timestamp(today),
+            freq='W-FRI'
+        )
+        for friday in fridays:
+            valid = []
+            for code, data in price_cache.items():
+                # 合约已经结束交易（最后一个价格日超过10天前）则跳过
+                if data['last_date'] < friday - pd.Timedelta(days=10):
+                    continue
+                window = data['series'][data['series'].index <= friday]
+                if window.empty:
+                    continue
+                price = float(window.iloc[-1])
+                if price > 0:
+                    valid.append({
+                        "code":     code,
+                        "delivery": data['delivery'],
+                        "price":    price
+                    })
+
+            valid.sort(key=lambda x: x['delivery'])
+            if len(valid) < 2:
+                continue
+
+            m1 = valid[0]
+            m3 = valid[2] if len(valid) >= 3 else valid[-1]
+
+            spread_history.append({
+                "date":        friday.strftime("%Y-%m-%d"),
+                "m1_price":    m1['price'],
+                "m3_price":    m3['price'],
+                "m1_contract": m1['code'],
+                "m3_contract": m3['code'],
+                "spread":      round(m1['price'] - m3['price'], 0)
+            })
+
+        seen = set()
+        spread_history = [
+            r for r in spread_history
+            if r['date'] not in seen and not seen.add(r['date'])
+        ]
+        spread_history.sort(key=lambda r: r['date'])
+        print(f"  价差历史: {len(spread_history)} 周")
+
+    # ── 3. 注册仓单（库存）：追加当周数据 ─────────────────────────────────────
+    inventory_history = list(existing_inventory)
+    try:
+        wh    = ak.futures_shfe_warehouse_receipt()
+        cu_wh = wh.get('铜', pd.DataFrame())
+        if not cu_wh.empty:
+            # 取"总计"行（WHABBRNAME='总计'），避免对小计行重复累加
+            total_rows = cu_wh[cu_wh['WHABBRNAME'] == '总计']
+            if total_rows.empty:
+                # 备用：取 ROWSTATUS=2 的最后一行
+                total_rows = cu_wh[cu_wh['ROWSTATUS'] == 2].tail(1)
+            if total_rows.empty:
+                raise ValueError("未找到总计行")
+            total  = int(total_rows.iloc[-1]['WRTWGHTS'])
+            change = int(total_rows.iloc[-1]['WRTCHANGE'])
+            # 取本周五作为记录日期
+            days_to_fri  = (4 - today.weekday()) % 7
+            this_friday  = (today + timedelta(days=days_to_fri)).strftime('%Y-%m-%d')
+            if not inventory_history or inventory_history[-1]['date'] != this_friday:
+                inventory_history.append({
+                    "date":   this_friday,
+                    "total":  total,
+                    "change": change
+                })
+                print(f"  仓单: {total:,} 吨 (变化 {change:+,} 吨) [{this_friday}]")
+            else:
+                print(f"  仓单: 已是最新 ({this_friday})")
+    except Exception as e:
+        print(f"  仓单获取失败: {e}")
+
+    print(f"  完成: 快照 {len(snapshot)} 合约 | 价差 {len(spread_history)} 周 | 仓单 {len(inventory_history)} 条")
+    return {
+        "snapshot":          snapshot,
+        "spread_history":    spread_history,
+        "inventory_history": inventory_history
+    }
+
+
 def save_to_json(data: dict, filename: str = "cot_data.json"):
     """保存数据为JSON文件"""
     os.makedirs(OUTPUT_DIR, exist_ok=True)
@@ -470,21 +635,33 @@ def main():
     print("CFTC COT 数据获取程序")
     print("=" * 55)
 
+    # 读取已有 JSON（保留沪铜仓单历史，避免每次覆盖）
+    existing_fp = os.path.join(OUTPUT_DIR, "cot_data.json")
+    existing_shfe_inventory = []
+    if os.path.exists(existing_fp):
+        try:
+            with open(existing_fp, "r", encoding="utf-8") as f:
+                old = json.load(f)
+            existing_shfe_inventory = old.get("shfe_copper", {}).get("inventory_history", [])
+        except Exception:
+            pass
+
     result = {
         "commodities": {},
         "commodity_list": [],
         "tff_instruments": {},
         "tff_instrument_list": [],
         "copper_curve": {"snapshot": [], "spread_history": []},
+        "shfe_copper":  {"snapshot": [], "spread_history": [], "inventory_history": []},
         "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     }
 
     # ── 1. COT Disaggregated 商品数据 ─────────────────────────────────────
-    print("\n[1/5] 获取 COT Disaggregated 数据（商品）...")
+    print("\n[1/6] 获取 COT Disaggregated 数据（商品）...")
     raw_df = fetch_cot_data()
     print(f"  共 {len(raw_df)} 条原始记录")
 
-    print("\n[2/5] 处理商品品种...")
+    print("\n[2/6] 处理商品品种...")
     for code, config in COMMODITIES.items():
         print(f"  {config['name']} ({code})...", end=" ")
         try:
@@ -506,7 +683,7 @@ def main():
             print(f"错误: {e}")
 
     # ── 2. TFF 外汇 & 加密数据 ─────────────────────────────────────────────
-    print("\n[3/5] 获取 TFF 数据（外汇 & 加密货币）...")
+    print("\n[3/6] 获取 TFF 数据（外汇 & 加密货币）...")
     try:
         tff_raw = fetch_tff_data()
         print(f"  共 {len(tff_raw)} 条原始记录")
@@ -534,15 +711,18 @@ def main():
         print(f"  TFF数据获取失败: {e}")
 
     # ── 3. COMEX 铜期货期限结构 ────────────────────────────────────────────
-    print("\n[4/5] 获取 COMEX 铜期货期限结构...")
+    print("\n[4/6] 获取 COMEX 铜期货期限结构...")
     result["copper_curve"] = fetch_copper_curve_data(weeks=156)
 
-    # ── 4. GVZ 数据 ────────────────────────────────────────────────────────
+    # ── 4. 沪铜（SHFE）期货数据 ───────────────────────────────────────────
+    print("\n[5/6] 获取沪铜（SHFE）期货数据...")
+    result["shfe_copper"] = fetch_shfe_copper_data(existing_shfe_inventory)
+
+    # ── 5. GVZ 数据 ────────────────────────────────────────────────────────
     gvz_records = fetch_gvz_data(start_year=2023)
     if gvz_records:
         result["gvz"] = gvz_records
     else:
-        existing_fp = os.path.join(OUTPUT_DIR, "cot_data.json")
         if os.path.exists(existing_fp):
             try:
                 with open(existing_fp, "r", encoding="utf-8") as f:
@@ -555,8 +735,8 @@ def main():
         else:
             result["gvz"] = []
 
-    # ── 5. 保存 ────────────────────────────────────────────────────────────
-    print("\n[5/5] 保存数据...")
+    # ── 6. 保存 ────────────────────────────────────────────────────────────
+    print("\n[6/6] 保存数据...")
     save_to_json(result)
 
     print("\n" + "=" * 55)

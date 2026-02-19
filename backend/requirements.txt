@@ -3,3 +3,4 @@ pandas
 requests
 beautifulsoup4
 yfinance
+akshare
