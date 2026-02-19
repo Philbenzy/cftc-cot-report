@@ -323,12 +323,18 @@
     const DATA_URL = 'https://raw.githubusercontent.com/Philbenzy/cftc-cot-report/main/data/cot_data.json';
 
     async function loadData() {
-      try {
-        const res = await fetch(DATA_URL);
-        if (res.ok) ALL_DATA = await res.json();
-        else throw new Error(`HTTP ${res.status}`);
-      } catch (e) {
-        console.error('远程数据加载失败，使用内置数据', e);
+      // 三级回退：GitHub Raw → 本地文件 → 内置数据
+      const sources = [DATA_URL, './data/cot_data.json'];
+      for (const url of sources) {
+        try {
+          const res = await fetch(url);
+          if (res.ok) { ALL_DATA = await res.json(); break; }
+        } catch (e) {
+          console.warn(`数据源不可用: ${url}`, e);
+        }
+      }
+      if (!ALL_DATA) {
+        console.error('所有数据源均失败，使用内置数据');
         ALL_DATA = FALLBACK_DATA;
       }
       initUI();
