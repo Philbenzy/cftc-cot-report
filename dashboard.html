@@ -258,6 +258,18 @@
       <div class="chart-subtitle">紫线：GVZ（左轴） | 金柱：GLD 周成交量（右轴） | 灰色虚线为均值</div>
       <div class="chart-container"><canvas id="gvzChart"></canvas></div>
     </div>
+
+    <!-- 铜期货期限结构：仅铜品种显示 -->
+    <div class="chart-card full copper-only" id="copperCurveCard" style="display:none">
+      <div class="chart-title">COPPER (COMEX) 铜 - 期货曲线（当前快照）</div>
+      <div class="chart-subtitle">每个点代表一个合约月份的最新收盘价 | 曲线向上倾斜 = Contango（远月溢价，正常） | 向下倾斜 = Backwardation（近月溢价，供应偏紧）</div>
+      <div class="chart-container"><canvas id="copperCurveChart"></canvas></div>
+    </div>
+    <div class="chart-card full copper-only" id="copperSpreadCard" style="display:none">
+      <div class="chart-title">COPPER (COMEX) 铜 - 季度合约期限结构价差历史</div>
+      <div class="chart-subtitle">最近季度合约（M1Q）价格 − 第三季度合约（M3Q）价格 | 绿色（正值）= Backwardation，近月溢价，通常反映库存偏紧 | 红色（负值）= Contango，远月溢价 | 悬停查看具体合约代码</div>
+      <div class="chart-container"><canvas id="copperSpreadChart"></canvas></div>
+    </div>
   </div>
 
   <div class="table-card">
@@ -382,6 +394,7 @@
       renderMetrics(data.summary);
       renderCharts(data.weekly_data);
       renderGVZ(data.weekly_data);
+      renderCopperCurve();
       renderTable(data.weekly_data);
     }
 
@@ -715,6 +728,109 @@
       });
     }
 
+    function renderCopperCurve() {
+      const isCopper = currentMode === 'cot' && currentCommodity === 'copper';
+      document.getElementById('copperCurveCard').style.display = isCopper ? '' : 'none';
+      document.getElementById('copperSpreadCard').style.display = isCopper ? '' : 'none';
+      if (!isCopper) return;
+
+      if (charts.copperCurve)  charts.copperCurve.destroy();
+      if (charts.copperSpread) charts.copperSpread.destroy();
+
+      const curve = ALL_DATA.copper_curve || {};
+      const snapshot = curve.snapshot || [];
+      const spreadHistory = (curve.spread_history || []).slice(-currentWeeks);
+
+      const fmtMonthLabel = m => {
+        const mo = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        const [y, mn] = m.split('-');
+        return `${mo[parseInt(mn)-1]}'${y.slice(2)}`;
+      };
+
+      // 图1：当前期货曲线快照
+      if (snapshot.length) {
+        const prices = snapshot.map(d => d.price);
+        charts.copperCurve = new Chart(document.getElementById('copperCurveChart'), {
+          type: 'line',
+          data: {
+            labels: snapshot.map(d => fmtMonthLabel(d.month)),
+            datasets: [{
+              label: 'COMEX 铜期货价格 (USD/lb)',
+              data: prices,
+              borderColor: '#cd7f32',
+              backgroundColor: 'rgba(205,127,50,0.12)',
+              tension: 0.2,
+              pointRadius: 5,
+              pointHoverRadius: 7,
+              fill: true
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: { legend: { position: 'bottom' } },
+            scales: { y: { ticks: { callback: v => '$' + v.toFixed(4) } } }
+          }
+        });
+      }
+
+      // 图2：M1-M3 历史价差
+      if (spreadHistory.length) {
+        const spreads = spreadHistory.map(d => d.spread);
+        charts.copperSpread = new Chart(document.getElementById('copperSpreadChart'), {
+          type: 'bar',
+          data: {
+            labels: spreadHistory.map(d => d.date.slice(5)),
+            datasets: [
+              {
+                label: 'M1-M3 价差 (USD/lb)',
+                data: spreads,
+                backgroundColor: spreads.map(v => v > 0 ? 'rgba(34,197,94,0.7)' : 'rgba(239,68,68,0.7)'),
+                borderColor:     spreads.map(v => v > 0 ? '#22c55e' : '#ef4444'),
+                borderWidth: 1
+              },
+              {
+                label: '零线',
+                data: Array(spreadHistory.length).fill(0),
+                type: 'line',
+                borderColor: '#555',
+                borderDash: [5, 5],
+                borderWidth: 1.5,
+                pointRadius: 0,
+                fill: false
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+              legend: { position: 'bottom' },
+              tooltip: {
+                callbacks: {
+                  label: ctx => {
+                    if (ctx.dataset.label === '零线') return null;
+                    const d = spreadHistory[ctx.dataIndex];
+                    const sign = d.spread >= 0 ? '+' : '';
+                    return [
+                      `M1-M3: ${sign}${(d.spread * 100).toFixed(2)}¢/lb`,
+                      `M1 (${d.m1_contract}): $${d.m1_price.toFixed(4)}`,
+                      `M3 (${d.m3_contract}): $${d.m3_price.toFixed(4)}`
+                    ];
+                  }
+                }
+              }
+            },
+            scales: {
+              y: { ticks: { callback: v => (v >= 0 ? '+' : '') + (v * 100).toFixed(1) + '¢' } }
+            }
+          }
+        });
+      }
+    }
+
     function renderTable(weeklyData) {
       const rows = [...weeklyData].reverse();
       const L = getLabels();
@@ -745,6 +861,7 @@
       "commodity_list": [{"code": "gold", "name": "黄金", "name_en": "GOLD (COMEX)"}],
       "tff_instrument_list": [],
       "tff_instruments": {},
+      "copper_curve": {"snapshot": [], "spread_history": []},
       "commodities": {
         "gold": {
           "name": "黄金", "name_en": "GOLD (COMEX)",

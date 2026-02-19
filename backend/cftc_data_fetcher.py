@@ -8,8 +8,10 @@ CFTC COT Report Data Fetcher
 
 import json
 import os
-from datetime import datetime
+import time
+from datetime import datetime, timedelta
 import pandas as pd
+import requests
 import cot_reports as cot
 import yfinance as yf
 
@@ -264,6 +266,195 @@ def fetch_gvz_data(start_year: int = 2023) -> list:
     return records
 
 
+def _next_month(year: int, month: int):
+    """返回下一个月的 (year, month)"""
+    return (year + 1, 1) if month == 12 else (year, month + 1)
+
+
+def get_copper_contract(date: datetime, offset: int = 0):
+    """
+    返回给定日期的第 (offset+1) 个活跃 COMEX 铜期货合约。
+    以每月 25 日作为合约到期的保守估计（实际为交割月倒数第 3 个交易日）。
+    offset=0 → M1（近月），offset=2 → M3（第三月）
+    返回: (ticker, delivery_year, delivery_month)
+    """
+    MONTH_CODES = {1:'F', 2:'G', 3:'H', 4:'J', 5:'K', 6:'M',
+                   7:'N', 8:'Q', 9:'U', 10:'V', 11:'X', 12:'Z'}
+    y, m = date.year, date.month
+    count = 0
+    while True:
+        if datetime(y, m, 25) > date:
+            if count == offset:
+                return f"HG{MONTH_CODES[m]}{str(y)[-2:]}.CMX", y, m
+            count += 1
+        y, m = _next_month(y, m)
+
+
+def _fetch_cme_settlements(trade_date_str: str) -> list:
+    """从 CME 公开 API 获取指定日期的铜期货结算价列表"""
+    url = (
+        f"https://www.cmegroup.com/CmeWS/mvc/Settlements/futures/settlements"
+        f"/HG/future?tradeDate={trade_date_str}&version=final"
+    )
+    headers = {"User-Agent": "Mozilla/5.0"}
+    try:
+        resp = requests.get(url, headers=headers, timeout=12)
+        if resp.status_code != 200:
+            return []
+        return resp.json().get("settlements", [])
+    except Exception:
+        return []
+
+
+def _parse_settle(val: str):
+    """将结算价字符串转为 float，失败返回 None"""
+    if not val or val.strip() in ("", "-", "---", "UNCH", "EST", "A", "B"):
+        return None
+    try:
+        return float(val.replace(",", ""))
+    except ValueError:
+        return None
+
+
+def fetch_copper_curve_data(weeks: int = 156) -> dict:
+    """
+    获取 COMEX 铜期货期限结构数据：
+    - snapshot ：yfinance 抓取当前活跃合约价格（未来 12 个月）
+    - spread_history：使用当前活跃季度合约的长期历史数据计算近远月价差
+      策略：下载当前活跃的季度合约（H/K/N/U/Z），这些合约在 yfinance 中
+      保留有完整的上市至今历史（可追溯至 2020-2021 年），通过它们计算每周
+      "最近未到期季度合约 M1" 与 "第三近季度合约 M3" 的价差。
+    价格单位：USD/lb
+    """
+    print("\n正在获取 COMEX 铜期货期限结构数据...")
+    today = datetime.now()
+
+    MONTH_CODES = {1: 'F', 2: 'G', 3: 'H', 4: 'J', 5: 'K', 6: 'M',
+                   7: 'N', 8: 'Q', 9: 'U', 10: 'V', 11: 'X', 12: 'Z'}
+    QUARTERLY = {3, 5, 7, 9, 12}   # H, K, N, U, Z 季度月
+
+    # ── 快照：用 yfinance 下载当前活跃合约（含非季度月） ──────────────────────
+    snapshot_meta = []
+    for i in range(12):
+        ticker, y, m = get_copper_contract(today, offset=i)
+        snapshot_meta.append({"ticker": ticker, "year": y, "month": m})
+
+    tickers_list = [s["ticker"] for s in snapshot_meta]
+    snapshot = []
+    try:
+        raw = yf.download(tickers_list, period="5d", auto_adjust=True, progress=False)
+        if not raw.empty:
+            if isinstance(raw.columns, pd.MultiIndex):
+                close_df = raw["Close"].copy()
+            else:
+                close_df = pd.DataFrame({tickers_list[0]: raw["Close"]})
+            close_df.index = pd.to_datetime(close_df.index).tz_localize(None)
+            for item in snapshot_meta:
+                s = close_df.get(item["ticker"])
+                if s is None:
+                    continue
+                s = s.dropna()
+                if s.empty:
+                    continue
+                snapshot.append({
+                    "month":    f"{item['year']}-{item['month']:02d}",
+                    "price":    round(float(s.iloc[-1]), 4),
+                    "contract": item["ticker"]
+                })
+    except Exception as e:
+        print(f"  快照获取失败: {e}")
+
+    # ── 价差历史：利用活跃季度合约的长期历史 ─────────────────────────────────
+    # 生成未来 3 年内的季度合约列表（这些合约通常有 3-5 年历史数据）
+    quarterly_meta = []
+    y, m = today.year, today.month
+    for _ in range(37):
+        if m in QUARTERLY:
+            ticker = f"HG{MONTH_CODES[m]}{str(y)[-2:]}.CMX"
+            quarterly_meta.append({
+                "ticker": ticker,
+                "year": y, "month": m,
+                "expiry": datetime(y, m, 25)   # 以 25 日为保守到期日
+            })
+        y, m = _next_month(y, m)
+
+    qtickers = [q["ticker"] for q in quarterly_meta]
+    start_date = (today - timedelta(days=weeks * 7 + 30)).strftime("%Y-%m-%d")
+    print(f"  下载 {len(qtickers)} 个季度合约历史数据（从 {start_date} 起）...")
+
+    spread_history = []
+    try:
+        hist_raw = yf.download(qtickers, start=start_date, auto_adjust=True, progress=False)
+
+        if not hist_raw.empty:
+            if isinstance(hist_raw.columns, pd.MultiIndex):
+                hist_close = hist_raw["Close"].copy()
+            else:
+                hist_close = pd.DataFrame({qtickers[0]: hist_raw["Close"]})
+            hist_close.index = pd.to_datetime(hist_close.index).tz_localize(None)
+
+            # 按每周五生成日期序列
+            end_dt   = pd.Timestamp(today)
+            start_dt = pd.Timestamp(start_date)
+            fridays  = pd.date_range(start=start_dt, end=end_dt, freq="W-FRI")
+
+            for friday in fridays:
+                # 取该周五当日或之前最近一个交易日的收盘价
+                window = hist_close[hist_close.index <= friday]
+                if window.empty:
+                    continue
+                latest_row = window.iloc[-1]
+
+                # 收集该日有效价格、且尚未到期的季度合约
+                valid = []
+                for q in quarterly_meta:
+                    if q["expiry"] <= friday:
+                        continue   # 已到期，跳过
+                    col = q["ticker"]
+                    if col not in hist_close.columns:
+                        continue
+                    price = latest_row.get(col)
+                    if price is None or pd.isna(price) or float(price) <= 0:
+                        continue
+                    valid.append({
+                        "ticker":  col,
+                        "expiry":  q["expiry"],
+                        "price":   float(price),
+                        "label":   col.replace(".CMX", "")
+                    })
+
+                valid.sort(key=lambda x: x["expiry"])
+
+                if len(valid) < 2:
+                    continue
+
+                m1 = valid[0]
+                m3 = valid[2] if len(valid) >= 3 else valid[-1]
+
+                spread_history.append({
+                    "date":        friday.strftime("%Y-%m-%d"),
+                    "m1_price":    round(m1["price"], 4),
+                    "m3_price":    round(m3["price"], 4),
+                    "m1_contract": m1["label"],
+                    "m3_contract": m3["label"],
+                    "spread":      round(m1["price"] - m3["price"], 4)
+                })
+
+    except Exception as e:
+        print(f"  价差历史获取失败: {e}")
+
+    # 按日期去重并排序
+    seen = set()
+    spread_history = [
+        r for r in spread_history
+        if r["date"] not in seen and not seen.add(r["date"])
+    ]
+    spread_history.sort(key=lambda r: r["date"])
+
+    print(f"  成功: 快照 {len(snapshot)} 个合约, 历史价差 {len(spread_history)} 周")
+    return {"snapshot": snapshot, "spread_history": spread_history}
+
+
 def save_to_json(data: dict, filename: str = "cot_data.json"):
     """保存数据为JSON文件"""
     os.makedirs(OUTPUT_DIR, exist_ok=True)
@@ -284,15 +475,16 @@ def main():
         "commodity_list": [],
         "tff_instruments": {},
         "tff_instrument_list": [],
+        "copper_curve": {"snapshot": [], "spread_history": []},
         "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     }
 
     # ── 1. COT Disaggregated 商品数据 ─────────────────────────────────────
-    print("\n[1/4] 获取 COT Disaggregated 数据（商品）...")
+    print("\n[1/5] 获取 COT Disaggregated 数据（商品）...")
     raw_df = fetch_cot_data()
     print(f"  共 {len(raw_df)} 条原始记录")
 
-    print("\n[2/4] 处理商品品种...")
+    print("\n[2/5] 处理商品品种...")
     for code, config in COMMODITIES.items():
         print(f"  {config['name']} ({code})...", end=" ")
         try:
@@ -314,7 +506,7 @@ def main():
             print(f"错误: {e}")
 
     # ── 2. TFF 外汇 & 加密数据 ─────────────────────────────────────────────
-    print("\n[3/4] 获取 TFF 数据（外汇 & 加密货币）...")
+    print("\n[3/5] 获取 TFF 数据（外汇 & 加密货币）...")
     try:
         tff_raw = fetch_tff_data()
         print(f"  共 {len(tff_raw)} 条原始记录")
@@ -341,7 +533,11 @@ def main():
     except Exception as e:
         print(f"  TFF数据获取失败: {e}")
 
-    # ── 3. GVZ 数据 ────────────────────────────────────────────────────────
+    # ── 3. COMEX 铜期货期限结构 ────────────────────────────────────────────
+    print("\n[4/5] 获取 COMEX 铜期货期限结构...")
+    result["copper_curve"] = fetch_copper_curve_data(weeks=156)
+
+    # ── 4. GVZ 数据 ────────────────────────────────────────────────────────
     gvz_records = fetch_gvz_data(start_year=2023)
     if gvz_records:
         result["gvz"] = gvz_records
@@ -359,8 +555,8 @@ def main():
         else:
             result["gvz"] = []
 
-    # ── 4. 保存 ────────────────────────────────────────────────────────────
-    print("\n[4/4] 保存数据...")
+    # ── 5. 保存 ────────────────────────────────────────────────────────────
+    print("\n[5/5] 保存数据...")
     save_to_json(result)
 
     print("\n" + "=" * 55)

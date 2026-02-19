@@ -58408,7 +58408,1353 @@
       "name_en": "VIX (CBOE)"
     }
   ],
-  "updated_at": "2026-02-17 16:54:21",
+  "copper_curve": {
+    "snapshot": [
+      {
+        "month": "2026-02",
+        "price": 5.793,
+        "contract": "HGG26.CMX"
+      },
+      {
+        "month": "2026-03",
+        "price": 5.761,
+        "contract": "HGH26.CMX"
+      },
+      {
+        "month": "2026-04",
+        "price": 5.7915,
+        "contract": "HGJ26.CMX"
+      },
+      {
+        "month": "2026-05",
+        "price": 5.821,
+        "contract": "HGK26.CMX"
+      },
+      {
+        "month": "2026-06",
+        "price": 5.857,
+        "contract": "HGM26.CMX"
+      },
+      {
+        "month": "2026-07",
+        "price": 5.8785,
+        "contract": "HGN26.CMX"
+      },
+      {
+        "month": "2026-08",
+        "price": 5.9245,
+        "contract": "HGQ26.CMX"
+      },
+      {
+        "month": "2026-09",
+        "price": 5.947,
+        "contract": "HGU26.CMX"
+      },
+      {
+        "month": "2026-10",
+        "price": 6.0015,
+        "contract": "HGV26.CMX"
+      },
+      {
+        "month": "2026-11",
+        "price": 6.019,
+        "contract": "HGX26.CMX"
+      },
+      {
+        "month": "2026-12",
+        "price": 6.036,
+        "contract": "HGZ26.CMX"
+      },
+      {
+        "month": "2027-01",
+        "price": 6.0745,
+        "contract": "HGF27.CMX"
+      }
+    ],
+    "spread_history": [
+      {
+        "date": "2023-01-27",
+        "m1_price": 4.2235,
+        "m3_price": 4.237,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0135
+      },
+      {
+        "date": "2023-02-03",
+        "m1_price": 4.0855,
+        "m3_price": 4.099,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0135
+      },
+      {
+        "date": "2023-02-10",
+        "m1_price": 4.024,
+        "m3_price": 4.0375,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0135
+      },
+      {
+        "date": "2023-02-17",
+        "m1_price": 4.0945,
+        "m3_price": 4.108,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0135
+      },
+      {
+        "date": "2023-02-24",
+        "m1_price": 3.9525,
+        "m3_price": 3.966,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0135
+      },
+      {
+        "date": "2023-03-03",
+        "m1_price": 4.067,
+        "m3_price": 4.0805,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0135
+      },
+      {
+        "date": "2023-03-10",
+        "m1_price": 4.042,
+        "m3_price": 4.0555,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0135
+      },
+      {
+        "date": "2023-03-17",
+        "m1_price": 3.9085,
+        "m3_price": 3.922,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0135
+      },
+      {
+        "date": "2023-03-24",
+        "m1_price": 4.0735,
+        "m3_price": 4.087,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0135
+      },
+      {
+        "date": "2023-03-31",
+        "m1_price": 4.094,
+        "m3_price": 4.1065,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0125
+      },
+      {
+        "date": "2023-04-07",
+        "m1_price": 4.0115,
+        "m3_price": 4.024,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0125
+      },
+      {
+        "date": "2023-04-14",
+        "m1_price": 4.088,
+        "m3_price": 4.1005,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0125
+      },
+      {
+        "date": "2023-04-21",
+        "m1_price": 3.9955,
+        "m3_price": 4.008,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0125
+      },
+      {
+        "date": "2023-04-28",
+        "m1_price": 3.908,
+        "m3_price": 3.9205,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0125
+      },
+      {
+        "date": "2023-05-05",
+        "m1_price": 3.9185,
+        "m3_price": 3.931,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0125
+      },
+      {
+        "date": "2023-05-12",
+        "m1_price": 3.778,
+        "m3_price": 3.7905,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0125
+      },
+      {
+        "date": "2023-05-19",
+        "m1_price": 3.8015,
+        "m3_price": 3.814,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0125
+      },
+      {
+        "date": "2023-05-26",
+        "m1_price": 3.7605,
+        "m3_price": 3.773,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0125
+      },
+      {
+        "date": "2023-06-02",
+        "m1_price": 3.807,
+        "m3_price": 3.8195,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0125
+      },
+      {
+        "date": "2023-06-09",
+        "m1_price": 3.8405,
+        "m3_price": 3.853,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0125
+      },
+      {
+        "date": "2023-06-16",
+        "m1_price": 3.9285,
+        "m3_price": 3.941,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0125
+      },
+      {
+        "date": "2023-06-23",
+        "m1_price": 3.8455,
+        "m3_price": 3.858,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0125
+      },
+      {
+        "date": "2023-06-30",
+        "m1_price": 3.799,
+        "m3_price": 3.8115,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0125
+      },
+      {
+        "date": "2023-07-07",
+        "m1_price": 3.8465,
+        "m3_price": 3.859,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0125
+      },
+      {
+        "date": "2023-07-14",
+        "m1_price": 3.9895,
+        "m3_price": 4.002,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0125
+      },
+      {
+        "date": "2023-07-21",
+        "m1_price": 3.8965,
+        "m3_price": 3.909,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0125
+      },
+      {
+        "date": "2023-07-28",
+        "m1_price": 3.999,
+        "m3_price": 4.0115,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0125
+      },
+      {
+        "date": "2023-08-04",
+        "m1_price": 3.9645,
+        "m3_price": 3.977,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0125
+      },
+      {
+        "date": "2023-08-11",
+        "m1_price": 3.8425,
+        "m3_price": 3.855,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0125
+      },
+      {
+        "date": "2023-08-18",
+        "m1_price": 3.821,
+        "m3_price": 3.8335,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0125
+      },
+      {
+        "date": "2023-08-25",
+        "m1_price": 3.87,
+        "m3_price": 3.8825,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0125
+      },
+      {
+        "date": "2023-09-01",
+        "m1_price": 3.9415,
+        "m3_price": 3.954,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0125
+      },
+      {
+        "date": "2023-09-08",
+        "m1_price": 3.8205,
+        "m3_price": 3.833,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0125
+      },
+      {
+        "date": "2023-09-15",
+        "m1_price": 3.8855,
+        "m3_price": 3.898,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0125
+      },
+      {
+        "date": "2023-09-22",
+        "m1_price": 3.814,
+        "m3_price": 3.8265,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0125
+      },
+      {
+        "date": "2023-09-29",
+        "m1_price": 3.847,
+        "m3_price": 3.8595,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0125
+      },
+      {
+        "date": "2023-10-06",
+        "m1_price": 3.738,
+        "m3_price": 3.7505,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0125
+      },
+      {
+        "date": "2023-10-13",
+        "m1_price": 3.712,
+        "m3_price": 3.7245,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0125
+      },
+      {
+        "date": "2023-10-20",
+        "m1_price": 3.7205,
+        "m3_price": 3.733,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0125
+      },
+      {
+        "date": "2023-10-27",
+        "m1_price": 3.7985,
+        "m3_price": 3.7985,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": 0.0
+      },
+      {
+        "date": "2023-11-03",
+        "m1_price": 3.8475,
+        "m3_price": 3.8475,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": 0.0
+      },
+      {
+        "date": "2023-11-10",
+        "m1_price": 3.8075,
+        "m3_price": 3.8075,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": 0.0
+      },
+      {
+        "date": "2023-11-17",
+        "m1_price": 3.9365,
+        "m3_price": 3.9365,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": 0.0
+      },
+      {
+        "date": "2023-11-24",
+        "m1_price": 4.0015,
+        "m3_price": 4.0015,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": 0.0
+      },
+      {
+        "date": "2023-12-01",
+        "m1_price": 4.0735,
+        "m3_price": 4.0735,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": 0.0
+      },
+      {
+        "date": "2023-12-08",
+        "m1_price": 3.9675,
+        "m3_price": 3.9675,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": 0.0
+      },
+      {
+        "date": "2023-12-15",
+        "m1_price": 3.9825,
+        "m3_price": 3.9825,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": 0.0
+      },
+      {
+        "date": "2023-12-22",
+        "m1_price": 3.9915,
+        "m3_price": 3.9915,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": 0.0
+      },
+      {
+        "date": "2023-12-29",
+        "m1_price": 3.9805,
+        "m3_price": 3.9805,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": 0.0
+      },
+      {
+        "date": "2024-01-05",
+        "m1_price": 3.907,
+        "m3_price": 3.907,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": 0.0
+      },
+      {
+        "date": "2024-01-12",
+        "m1_price": 3.8485,
+        "m3_price": 3.8485,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": 0.0
+      },
+      {
+        "date": "2024-01-19",
+        "m1_price": 3.887,
+        "m3_price": 3.887,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": 0.0
+      },
+      {
+        "date": "2024-01-26",
+        "m1_price": 3.958,
+        "m3_price": 3.958,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": 0.0
+      },
+      {
+        "date": "2024-02-02",
+        "m1_price": 3.931,
+        "m3_price": 3.931,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": 0.0
+      },
+      {
+        "date": "2024-02-09",
+        "m1_price": 3.8,
+        "m3_price": 3.8,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": 0.0
+      },
+      {
+        "date": "2024-02-16",
+        "m1_price": 3.9175,
+        "m3_price": 3.9175,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": 0.0
+      },
+      {
+        "date": "2024-02-23",
+        "m1_price": 3.9725,
+        "m3_price": 3.9725,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": 0.0
+      },
+      {
+        "date": "2024-03-01",
+        "m1_price": 3.9275,
+        "m3_price": 3.9275,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": 0.0
+      },
+      {
+        "date": "2024-03-08",
+        "m1_price": 3.961,
+        "m3_price": 3.961,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": 0.0
+      },
+      {
+        "date": "2024-03-15",
+        "m1_price": 4.191,
+        "m3_price": 4.191,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": 0.0
+      },
+      {
+        "date": "2024-03-22",
+        "m1_price": 4.105,
+        "m3_price": 4.105,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": 0.0
+      },
+      {
+        "date": "2024-03-29",
+        "m1_price": 4.1235,
+        "m3_price": 4.1235,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": 0.0
+      },
+      {
+        "date": "2024-04-05",
+        "m1_price": 4.3595,
+        "m3_price": 4.3595,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": 0.0
+      },
+      {
+        "date": "2024-04-12",
+        "m1_price": 4.3795,
+        "m3_price": 4.3795,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": 0.0
+      },
+      {
+        "date": "2024-04-19",
+        "m1_price": 4.5655,
+        "m3_price": 4.5625,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": 0.003
+      },
+      {
+        "date": "2024-04-26",
+        "m1_price": 4.621,
+        "m3_price": 4.6175,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": 0.0035
+      },
+      {
+        "date": "2024-05-03",
+        "m1_price": 4.5905,
+        "m3_price": 4.587,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": 0.0035
+      },
+      {
+        "date": "2024-05-10",
+        "m1_price": 4.6175,
+        "m3_price": 4.614,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": 0.0035
+      },
+      {
+        "date": "2024-05-17",
+        "m1_price": 4.874,
+        "m3_price": 4.8705,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": 0.0035
+      },
+      {
+        "date": "2024-05-24",
+        "m1_price": 4.731,
+        "m3_price": 4.727,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": 0.004
+      },
+      {
+        "date": "2024-05-31",
+        "m1_price": 4.643,
+        "m3_price": 4.6415,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": 0.0015
+      },
+      {
+        "date": "2024-06-07",
+        "m1_price": 4.521,
+        "m3_price": 4.5195,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": 0.0015
+      },
+      {
+        "date": "2024-06-14",
+        "m1_price": 4.5105,
+        "m3_price": 4.509,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": 0.0015
+      },
+      {
+        "date": "2024-06-21",
+        "m1_price": 4.485,
+        "m3_price": 4.4835,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": 0.0015
+      },
+      {
+        "date": "2024-06-28",
+        "m1_price": 4.4695,
+        "m3_price": 4.468,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": 0.0015
+      },
+      {
+        "date": "2024-07-05",
+        "m1_price": 4.6545,
+        "m3_price": 4.653,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": 0.0015
+      },
+      {
+        "date": "2024-07-12",
+        "m1_price": 4.6315,
+        "m3_price": 4.6385,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.007
+      },
+      {
+        "date": "2024-07-19",
+        "m1_price": 4.3715,
+        "m3_price": 4.387,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0155
+      },
+      {
+        "date": "2024-07-26",
+        "m1_price": 4.2875,
+        "m3_price": 4.303,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0155
+      },
+      {
+        "date": "2024-08-02",
+        "m1_price": 4.2795,
+        "m3_price": 4.294,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0145
+      },
+      {
+        "date": "2024-08-09",
+        "m1_price": 4.1655,
+        "m3_price": 4.186,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0205
+      },
+      {
+        "date": "2024-08-16",
+        "m1_price": 4.304,
+        "m3_price": 4.3245,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0205
+      },
+      {
+        "date": "2024-08-23",
+        "m1_price": 4.3565,
+        "m3_price": 4.377,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0205
+      },
+      {
+        "date": "2024-08-30",
+        "m1_price": 4.3475,
+        "m3_price": 4.368,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0205
+      },
+      {
+        "date": "2024-09-06",
+        "m1_price": 4.221,
+        "m3_price": 4.241,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.02
+      },
+      {
+        "date": "2024-09-13",
+        "m1_price": 4.356,
+        "m3_price": 4.3735,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0175
+      },
+      {
+        "date": "2024-09-20",
+        "m1_price": 4.4645,
+        "m3_price": 4.482,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0175
+      },
+      {
+        "date": "2024-09-27",
+        "m1_price": 4.697,
+        "m3_price": 4.687,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": 0.01
+      },
+      {
+        "date": "2024-10-04",
+        "m1_price": 4.7065,
+        "m3_price": 4.713,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0065
+      },
+      {
+        "date": "2024-10-11",
+        "m1_price": 4.6355,
+        "m3_price": 4.6535,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.018
+      },
+      {
+        "date": "2024-10-18",
+        "m1_price": 4.5585,
+        "m3_price": 4.6155,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.057
+      },
+      {
+        "date": "2024-10-25",
+        "m1_price": 4.5415,
+        "m3_price": 4.5985,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.057
+      },
+      {
+        "date": "2024-11-01",
+        "m1_price": 4.536,
+        "m3_price": 4.5675,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0315
+      },
+      {
+        "date": "2024-11-08",
+        "m1_price": 4.4775,
+        "m3_price": 4.516,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0385
+      },
+      {
+        "date": "2024-11-15",
+        "m1_price": 4.23,
+        "m3_price": 4.278,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.048
+      },
+      {
+        "date": "2024-11-22",
+        "m1_price": 4.2485,
+        "m3_price": 4.294,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0455
+      },
+      {
+        "date": "2024-11-29",
+        "m1_price": 4.258,
+        "m3_price": 4.3055,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0475
+      },
+      {
+        "date": "2024-12-06",
+        "m1_price": 4.3075,
+        "m3_price": 4.3525,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.045
+      },
+      {
+        "date": "2024-12-13",
+        "m1_price": 4.297,
+        "m3_price": 4.3405,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0435
+      },
+      {
+        "date": "2024-12-20",
+        "m1_price": 4.2255,
+        "m3_price": 4.2685,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.043
+      },
+      {
+        "date": "2024-12-27",
+        "m1_price": 4.256,
+        "m3_price": 4.29,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.034
+      },
+      {
+        "date": "2025-01-03",
+        "m1_price": 4.2035,
+        "m3_price": 4.2285,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.025
+      },
+      {
+        "date": "2025-01-10",
+        "m1_price": 4.399,
+        "m3_price": 4.4165,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0175
+      },
+      {
+        "date": "2025-01-17",
+        "m1_price": 4.4915,
+        "m3_price": 4.5115,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.02
+      },
+      {
+        "date": "2025-01-24",
+        "m1_price": 4.4835,
+        "m3_price": 4.506,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0225
+      },
+      {
+        "date": "2025-01-31",
+        "m1_price": 4.4535,
+        "m3_price": 4.482,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0285
+      },
+      {
+        "date": "2025-02-07",
+        "m1_price": 4.7565,
+        "m3_price": 4.7825,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.026
+      },
+      {
+        "date": "2025-02-14",
+        "m1_price": 4.846,
+        "m3_price": 4.873,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.027
+      },
+      {
+        "date": "2025-02-21",
+        "m1_price": 4.766,
+        "m3_price": 4.7925,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0265
+      },
+      {
+        "date": "2025-02-28",
+        "m1_price": 4.707,
+        "m3_price": 4.735,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.028
+      },
+      {
+        "date": "2025-03-07",
+        "m1_price": 4.8885,
+        "m3_price": 4.9275,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.039
+      },
+      {
+        "date": "2025-03-14",
+        "m1_price": 5.086,
+        "m3_price": 5.1295,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0435
+      },
+      {
+        "date": "2025-03-21",
+        "m1_price": 5.3055,
+        "m3_price": 5.351,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0455
+      },
+      {
+        "date": "2025-03-28",
+        "m1_price": 5.2695,
+        "m3_price": 5.2895,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.02
+      },
+      {
+        "date": "2025-04-04",
+        "m1_price": 4.5725,
+        "m3_price": 4.6115,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.039
+      },
+      {
+        "date": "2025-04-11",
+        "m1_price": 4.7115,
+        "m3_price": 4.752,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0405
+      },
+      {
+        "date": "2025-04-18",
+        "m1_price": 4.93,
+        "m3_price": 4.9705,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0405
+      },
+      {
+        "date": "2025-04-25",
+        "m1_price": 5.04,
+        "m3_price": 5.078,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.038
+      },
+      {
+        "date": "2025-05-02",
+        "m1_price": 4.8305,
+        "m3_price": 4.875,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0445
+      },
+      {
+        "date": "2025-05-09",
+        "m1_price": 4.8225,
+        "m3_price": 4.873,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0505
+      },
+      {
+        "date": "2025-05-16",
+        "m1_price": 4.7675,
+        "m3_price": 4.813,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0455
+      },
+      {
+        "date": "2025-05-23",
+        "m1_price": 5.0085,
+        "m3_price": 5.0525,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.044
+      },
+      {
+        "date": "2025-05-30",
+        "m1_price": 4.8625,
+        "m3_price": 4.911,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0485
+      },
+      {
+        "date": "2025-06-06",
+        "m1_price": 5.0305,
+        "m3_price": 5.0795,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.049
+      },
+      {
+        "date": "2025-06-13",
+        "m1_price": 4.989,
+        "m3_price": 5.038,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.049
+      },
+      {
+        "date": "2025-06-20",
+        "m1_price": 5.0035,
+        "m3_price": 5.0525,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.049
+      },
+      {
+        "date": "2025-06-27",
+        "m1_price": 5.246,
+        "m3_price": 5.2925,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0465
+      },
+      {
+        "date": "2025-07-04",
+        "m1_price": 5.186,
+        "m3_price": 5.2155,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGK26",
+        "spread": -0.0295
+      },
+      {
+        "date": "2025-07-11",
+        "m1_price": 5.716,
+        "m3_price": 5.741,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.025
+      },
+      {
+        "date": "2025-07-18",
+        "m1_price": 5.714,
+        "m3_price": 5.7385,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0245
+      },
+      {
+        "date": "2025-07-25",
+        "m1_price": 5.8945,
+        "m3_price": 5.9205,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.026
+      },
+      {
+        "date": "2025-08-01",
+        "m1_price": 4.55,
+        "m3_price": 4.605,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.055
+      },
+      {
+        "date": "2025-08-08",
+        "m1_price": 4.5845,
+        "m3_price": 4.6425,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.058
+      },
+      {
+        "date": "2025-08-15",
+        "m1_price": 4.608,
+        "m3_price": 4.6695,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0615
+      },
+      {
+        "date": "2025-08-22",
+        "m1_price": 4.5855,
+        "m3_price": 4.655,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0695
+      },
+      {
+        "date": "2025-08-29",
+        "m1_price": 4.643,
+        "m3_price": 4.7,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.057
+      },
+      {
+        "date": "2025-09-05",
+        "m1_price": 4.6075,
+        "m3_price": 4.6685,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.061
+      },
+      {
+        "date": "2025-09-12",
+        "m1_price": 4.7115,
+        "m3_price": 4.771,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0595
+      },
+      {
+        "date": "2025-09-19",
+        "m1_price": 4.691,
+        "m3_price": 4.7585,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0675
+      },
+      {
+        "date": "2025-09-26",
+        "m1_price": 4.836,
+        "m3_price": 4.9005,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0645
+      },
+      {
+        "date": "2025-10-03",
+        "m1_price": 5.169,
+        "m3_price": 5.22,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.051
+      },
+      {
+        "date": "2025-10-10",
+        "m1_price": 4.962,
+        "m3_price": 5.0265,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0645
+      },
+      {
+        "date": "2025-10-17",
+        "m1_price": 5.0385,
+        "m3_price": 5.1085,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.07
+      },
+      {
+        "date": "2025-10-24",
+        "m1_price": 5.192,
+        "m3_price": 5.2645,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0725
+      },
+      {
+        "date": "2025-10-31",
+        "m1_price": 5.157,
+        "m3_price": 5.2295,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0725
+      },
+      {
+        "date": "2025-11-07",
+        "m1_price": 5.027,
+        "m3_price": 5.111,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.084
+      },
+      {
+        "date": "2025-11-14",
+        "m1_price": 5.1355,
+        "m3_price": 5.22,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0845
+      },
+      {
+        "date": "2025-11-21",
+        "m1_price": 5.096,
+        "m3_price": 5.187,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.091
+      },
+      {
+        "date": "2025-11-28",
+        "m1_price": 5.272,
+        "m3_price": 5.3575,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0855
+      },
+      {
+        "date": "2025-12-05",
+        "m1_price": 5.462,
+        "m3_price": 5.559,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.097
+      },
+      {
+        "date": "2025-12-12",
+        "m1_price": 5.359,
+        "m3_price": 5.461,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.102
+      },
+      {
+        "date": "2025-12-19",
+        "m1_price": 5.51,
+        "m3_price": 5.6085,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.0985
+      },
+      {
+        "date": "2025-12-26",
+        "m1_price": 5.8395,
+        "m3_price": 5.946,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.1065
+      },
+      {
+        "date": "2026-01-02",
+        "m1_price": 5.6915,
+        "m3_price": 5.801,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.1095
+      },
+      {
+        "date": "2026-01-09",
+        "m1_price": 5.9025,
+        "m3_price": 6.0185,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.116
+      },
+      {
+        "date": "2026-01-16",
+        "m1_price": 5.831,
+        "m3_price": 5.947,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.116
+      },
+      {
+        "date": "2026-01-23",
+        "m1_price": 5.9475,
+        "m3_price": 6.062,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.1145
+      },
+      {
+        "date": "2026-01-30",
+        "m1_price": 5.924,
+        "m3_price": 6.036,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.112
+      },
+      {
+        "date": "2026-02-06",
+        "m1_price": 5.882,
+        "m3_price": 5.9975,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.1155
+      },
+      {
+        "date": "2026-02-13",
+        "m1_price": 5.803,
+        "m3_price": 5.921,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.118
+      }
+    ]
+  },
+  "updated_at": "2026-02-19 17:58:19",
   "gvz": [
     {
       "date": "2023-01-03",
@@ -59227,8 +60573,8 @@
     },
     {
       "date": "2026-02-17",
-      "close": 30.84,
-      "gld_volume": 44038300
+      "close": 33.24,
+      "gld_volume": 55033800
     }
   ]
 }
