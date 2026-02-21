@@ -10,6 +10,8 @@ on:
 jobs:
   update-data:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # 允许 workflow 推送代码
 
     steps:
       - name: Checkout repository
