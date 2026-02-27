@@ -4,34 +4,16 @@
       "name": "黄金",
       "name_en": "GOLD (COMEX)",
       "summary": {
-        "latest_date": "2026-02-17",
-        "mm_net": 96057,
-        "prod_net": -22505,
-        "open_interest": 723906,
-        "mm_net_change": 3019,
-        "prod_net_change": -2595,
-        "oi_change": -2250,
-        "long_short_ratio": 4.96
+        "latest_date": "2026-02-24",
+        "mm_net": 99937,
+        "prod_net": -24934,
+        "open_interest": 699768,
+        "mm_net_change": 3880,
+        "prod_net_change": -2429,
+        "oi_change": -24138,
+        "long_short_ratio": 5.45
       },
       "weekly_data": [
-        {
-          "date": "2023-02-28",
-          "mm_long": 113296,
-          "mm_short": 73388,
-          "mm_spreading": 57588,
-          "prod_long": 20560,
-          "prod_short": 53500,
-          "other_long": 103828,
-          "other_short": 30693,
-          "open_interest": 575384,
-          "mm_net": 39908,
-          "prod_net": -32940,
-          "other_net": 73135,
-          "mm_net_change": 0,
-          "prod_net_change": 0,
-          "other_net_change": 0,
-          "oi_change": 0
-        },
         {
           "date": "2023-03-07",
           "mm_long": 114511,
@@ -45,10 +27,10 @@
           "mm_net": 24106,
           "prod_net": -32290,
           "other_net": 74025,
-          "mm_net_change": -15802,
-          "prod_net_change": 650,
-          "other_net_change": 890,
-          "oi_change": 39861
+          "mm_net_change": 0,
+          "prod_net_change": 0,
+          "other_net_change": 0,
+          "oi_change": 0
         },
         {
           "date": "2023-03-14",
@@ -2821,6 +2803,24 @@
           "prod_net_change": -2595,
           "other_net_change": -3876,
           "oi_change": -2250
+        },
+        {
+          "date": "2026-02-24",
+          "mm_long": 122385,
+          "mm_short": 22448,
+          "mm_spreading": 64512,
+          "prod_long": 31242,
+          "prod_short": 56176,
+          "other_long": 85492,
+          "other_short": 23241,
+          "open_interest": 699768,
+          "mm_net": 99937,
+          "prod_net": -24934,
+          "other_net": 62251,
+          "mm_net_change": 3880,
+          "prod_net_change": -2429,
+          "other_net_change": 3718,
+          "oi_change": -24138
         }
       ]
     },
@@ -2828,34 +2828,16 @@
       "name": "白银",
       "name_en": "SILVER (COMEX)",
       "summary": {
-        "latest_date": "2026-02-17",
-        "mm_net": 6160,
-        "prod_net": -16630,
-        "open_interest": 198680,
-        "mm_net_change": 1575,
-        "prod_net_change": 703,
-        "oi_change": -2313,
-        "long_short_ratio": 2.2
+        "latest_date": "2026-02-24",
+        "mm_net": 7981,
+        "prod_net": -16739,
+        "open_interest": 168909,
+        "mm_net_change": 1821,
+        "prod_net_change": -109,
+        "oi_change": -29771,
+        "long_short_ratio": 2.49
       },
       "weekly_data": [
-        {
-          "date": "2023-02-28",
-          "mm_long": 30648,
-          "mm_short": 37741,
-          "mm_spreading": 4719,
-          "prod_long": 3423,
-          "prod_short": 26346,
-          "other_long": 12873,
-          "other_short": 7068,
-          "open_interest": 142562,
-          "mm_net": -7093,
-          "prod_net": -22923,
-          "other_net": 5805,
-          "mm_net_change": 0,
-          "prod_net_change": 0,
-          "other_net_change": 0,
-          "oi_change": 0
-        },
         {
           "date": "2023-03-07",
           "mm_long": 27565,
@@ -2869,10 +2851,10 @@
           "mm_net": -18205,
           "prod_net": -19841,
           "other_net": 7973,
-          "mm_net_change": -11112,
-          "prod_net_change": 3082,
-          "other_net_change": 2168,
-          "oi_change": 6624
+          "mm_net_change": 0,
+          "prod_net_change": 0,
+          "other_net_change": 0,
+          "oi_change": 0
         },
         {
           "date": "2023-03-14",
@@ -5645,6 +5627,24 @@
           "prod_net_change": 703,
           "other_net_change": -88,
           "oi_change": -2313
+        },
+        {
+          "date": "2026-02-24",
+          "mm_long": 13328,
+          "mm_short": 5347,
+          "mm_spreading": 22429,
+          "prod_long": 5304,
+          "prod_short": 22043,
+          "other_long": 18209,
+          "other_short": 5467,
+          "open_interest": 168909,
+          "mm_net": 7981,
+          "prod_net": -16739,
+          "other_net": 12742,
+          "mm_net_change": 1821,
+          "prod_net_change": -109,
+          "other_net_change": -3954,
+          "oi_change": -29771
         }
       ]
     },
@@ -5652,34 +5652,16 @@
       "name": "铜",
       "name_en": "COPPER (COMEX)",
       "summary": {
-        "latest_date": "2026-02-17",
-        "mm_net": 52700,
-        "prod_net": -96261,
-        "open_interest": 303054,
-        "mm_net_change": -1570,
-        "prod_net_change": -15967,
-        "oi_change": -1343,
-        "long_short_ratio": 5.59
+        "latest_date": "2026-02-24",
+        "mm_net": 50959,
+        "prod_net": -95937,
+        "open_interest": 280446,
+        "mm_net_change": -1741,
+        "prod_net_change": 324,
+        "oi_change": -22608,
+        "long_short_ratio": 4.83
       },
       "weekly_data": [
-        {
-          "date": "2023-02-28",
-          "mm_long": 48467,
-          "mm_short": 46963,
-          "mm_spreading": 30261,
-          "prod_long": 14728,
-          "prod_short": 67858,
-          "other_long": 10863,
-          "other_short": 20374,
-          "open_interest": 221481,
-          "mm_net": 1504,
-          "prod_net": -53130,
-          "other_net": -9511,
-          "mm_net_change": 0,
-          "prod_net_change": 0,
-          "other_net_change": 0,
-          "oi_change": 0
-        },
         {
           "date": "2023-03-07",
           "mm_long": 49687,
@@ -5693,10 +5675,10 @@
           "mm_net": -2290,
           "prod_net": -53905,
           "other_net": -8103,
-          "mm_net_change": -3794,
-          "prod_net_change": -775,
-          "other_net_change": 1408,
-          "oi_change": 13329
+          "mm_net_change": 0,
+          "prod_net_change": 0,
+          "other_net_change": 0,
+          "oi_change": 0
         },
         {
           "date": "2023-03-14",
@@ -8469,6 +8451,24 @@
           "prod_net_change": -15967,
           "other_net_change": 15675,
           "oi_change": -1343
+        },
+        {
+          "date": "2026-02-24",
+          "mm_long": 64278,
+          "mm_short": 13319,
+          "mm_spreading": 33975,
+          "prod_long": 31786,
+          "prod_short": 127723,
+          "other_long": 23575,
+          "other_short": 16341,
+          "open_interest": 280446,
+          "mm_net": 50959,
+          "prod_net": -95937,
+          "other_net": 7234,
+          "mm_net_change": -1741,
+          "prod_net_change": 324,
+          "other_net_change": 691,
+          "oi_change": -22608
         }
       ]
     },
@@ -8476,34 +8476,16 @@
       "name": "铂金",
       "name_en": "PLATINUM (NYMEX)",
       "summary": {
-        "latest_date": "2026-02-17",
-        "mm_net": 3303,
-        "prod_net": -12277,
-        "open_interest": 76208,
-        "mm_net_change": 1767,
-        "prod_net_change": 326,
-        "oi_change": -259,
-        "long_short_ratio": 1.37
+        "latest_date": "2026-02-24",
+        "mm_net": 4750,
+        "prod_net": -13069,
+        "open_interest": 79300,
+        "mm_net_change": 1447,
+        "prod_net_change": -792,
+        "oi_change": 3092,
+        "long_short_ratio": 1.52
       },
       "weekly_data": [
-        {
-          "date": "2023-02-28",
-          "mm_long": 16936,
-          "mm_short": 20857,
-          "mm_spreading": 5228,
-          "prod_long": 6004,
-          "prod_short": 27546,
-          "other_long": 10537,
-          "other_short": 1526,
-          "open_interest": 73722,
-          "mm_net": -3921,
-          "prod_net": -21542,
-          "other_net": 9011,
-          "mm_net_change": 0,
-          "prod_net_change": 0,
-          "other_net_change": 0,
-          "oi_change": 0
-        },
         {
           "date": "2023-03-07",
           "mm_long": 17987,
@@ -8517,10 +8499,10 @@
           "mm_net": -3328,
           "prod_net": -21542,
           "other_net": 8294,
-          "mm_net_change": 593,
+          "mm_net_change": 0,
           "prod_net_change": 0,
-          "other_net_change": -717,
-          "oi_change": 1633
+          "other_net_change": 0,
+          "oi_change": 0
         },
         {
           "date": "2023-03-14",
@@ -11293,6 +11275,24 @@
           "prod_net_change": 326,
           "other_net_change": -1590,
           "oi_change": -259
+        },
+        {
+          "date": "2026-02-24",
+          "mm_long": 13854,
+          "mm_short": 9104,
+          "mm_spreading": 9122,
+          "prod_long": 3693,
+          "prod_short": 16762,
+          "other_long": 15579,
+          "other_short": 7197,
+          "open_interest": 79300,
+          "mm_net": 4750,
+          "prod_net": -13069,
+          "other_net": 8382,
+          "mm_net_change": 1447,
+          "prod_net_change": -792,
+          "other_net_change": -110,
+          "oi_change": 3092
         }
       ]
     },
@@ -11300,34 +11300,16 @@
       "name": "钯金",
       "name_en": "PALLADIUM (NYMEX)",
       "summary": {
-        "latest_date": "2026-02-17",
-        "mm_net": 748,
-        "prod_net": -2673,
-        "open_interest": 18173,
-        "mm_net_change": 24,
-        "prod_net_change": 44,
-        "oi_change": 264,
-        "long_short_ratio": 1.15
+        "latest_date": "2026-02-24",
+        "mm_net": 1096,
+        "prod_net": -3324,
+        "open_interest": 17334,
+        "mm_net_change": 348,
+        "prod_net_change": -651,
+        "oi_change": -839,
+        "long_short_ratio": 1.22
       },
       "weekly_data": [
-        {
-          "date": "2023-02-28",
-          "mm_long": 1816,
-          "mm_short": 7266,
-          "mm_spreading": 283,
-          "prod_long": 2510,
-          "prod_short": 1281,
-          "other_long": 317,
-          "other_short": 808,
-          "open_interest": 11993,
-          "mm_net": -5450,
-          "prod_net": 1229,
-          "other_net": -491,
-          "mm_net_change": 0,
-          "prod_net_change": 0,
-          "other_net_change": 0,
-          "oi_change": 0
-        },
         {
           "date": "2023-03-07",
           "mm_long": 1752,
@@ -11341,10 +11323,10 @@
           "mm_net": -6403,
           "prod_net": 1643,
           "other_net": -692,
-          "mm_net_change": -953,
-          "prod_net_change": 414,
-          "other_net_change": -201,
-          "oi_change": 590
+          "mm_net_change": 0,
+          "prod_net_change": 0,
+          "other_net_change": 0,
+          "oi_change": 0
         },
         {
           "date": "2023-03-14",
@@ -14117,6 +14099,24 @@
           "prod_net_change": 44,
           "other_net_change": -206,
           "oi_change": 264
+        },
+        {
+          "date": "2026-02-24",
+          "mm_long": 5969,
+          "mm_short": 4873,
+          "mm_spreading": 612,
+          "prod_long": 667,
+          "prod_short": 3991,
+          "other_long": 1720,
+          "other_short": 2157,
+          "open_interest": 17334,
+          "mm_net": 1096,
+          "prod_net": -3324,
+          "other_net": -437,
+          "mm_net_change": 348,
+          "prod_net_change": -651,
+          "other_net_change": -194,
+          "oi_change": -839
         }
       ]
     },
@@ -14124,13 +14124,13 @@
       "name": "微型黄金",
       "name_en": "MICRO GOLD (COMEX)",
       "summary": {
-        "latest_date": "2026-02-17",
+        "latest_date": "2026-02-24",
         "mm_net": 0,
         "prod_net": 0,
-        "open_interest": 60817,
-        "mm_net_change": 393,
+        "open_interest": 59932,
+        "mm_net_change": 0,
         "prod_net_change": 0,
-        "oi_change": 222,
+        "oi_change": -885,
         "long_short_ratio": 0.0
       },
       "weekly_data": [
@@ -16239,6 +16239,24 @@
           "prod_net_change": 0,
           "other_net_change": -3156,
           "oi_change": 222
+        },
+        {
+          "date": "2026-02-24",
+          "mm_long": 0,
+          "mm_short": 0,
+          "mm_spreading": 0,
+          "prod_long": 0,
+          "prod_short": 0,
+          "other_long": 11781,
+          "other_short": 32859,
+          "open_interest": 59932,
+          "mm_net": 0,
+          "prod_net": 0,
+          "other_net": -21078,
+          "mm_net_change": 0,
+          "prod_net_change": 0,
+          "other_net_change": -3589,
+          "oi_change": -885
         }
       ]
     },
@@ -18782,34 +18800,16 @@
       "name": "钴",
       "name_en": "COBALT (COMEX)",
       "summary": {
-        "latest_date": "2026-02-17",
-        "mm_net": -704,
-        "prod_net": -3177,
-        "open_interest": 15597,
-        "mm_net_change": -73,
-        "prod_net_change": 15,
-        "oi_change": 114,
-        "long_short_ratio": 0.76
+        "latest_date": "2026-02-24",
+        "mm_net": -678,
+        "prod_net": -3091,
+        "open_interest": 15600,
+        "mm_net_change": 26,
+        "prod_net_change": 86,
+        "oi_change": 3,
+        "long_short_ratio": 0.77
       },
       "weekly_data": [
-        {
-          "date": "2023-02-28",
-          "mm_long": 4497,
-          "mm_short": 0,
-          "mm_spreading": 18,
-          "prod_long": 131,
-          "prod_short": 3290,
-          "other_long": 4786,
-          "other_short": 14258,
-          "open_interest": 17670,
-          "mm_net": 4497,
-          "prod_net": -3159,
-          "other_net": -9472,
-          "mm_net_change": 0,
-          "prod_net_change": 0,
-          "other_net_change": 0,
-          "oi_change": 0
-        },
         {
           "date": "2023-03-07",
           "mm_long": 4516,
@@ -18823,10 +18823,10 @@
           "mm_net": 4491,
           "prod_net": -2690,
           "other_net": -9692,
-          "mm_net_change": -6,
-          "prod_net_change": 469,
-          "other_net_change": -220,
-          "oi_change": -296
+          "mm_net_change": 0,
+          "prod_net_change": 0,
+          "other_net_change": 0,
+          "oi_change": 0
         },
         {
           "date": "2023-03-14",
@@ -21599,6 +21599,24 @@
           "prod_net_change": 15,
           "other_net_change": -45,
           "oi_change": 114
+        },
+        {
+          "date": "2026-02-24",
+          "mm_long": 2267,
+          "mm_short": 2945,
+          "mm_spreading": 2801,
+          "prod_long": 1908,
+          "prod_short": 4999,
+          "other_long": 2684,
+          "other_short": 1939,
+          "open_interest": 15600,
+          "mm_net": -678,
+          "prod_net": -3091,
+          "other_net": 745,
+          "mm_net_change": 26,
+          "prod_net_change": 86,
+          "other_net_change": -105,
+          "oi_change": 3
         }
       ]
     },
@@ -21606,34 +21624,16 @@
       "name": "WTI原油",
       "name_en": "WTI CRUDE OIL (NYMEX)",
       "summary": {
-        "latest_date": "2026-02-17",
-        "mm_net": 81219,
-        "prod_net": 167899,
-        "open_interest": 2577058,
-        "mm_net_change": -5095,
-        "prod_net_change": -6158,
-        "oi_change": -103125,
-        "long_short_ratio": 1.8
+        "latest_date": "2026-02-24",
+        "mm_net": 98187,
+        "prod_net": 142788,
+        "open_interest": 2724561,
+        "mm_net_change": 16968,
+        "prod_net_change": -25111,
+        "oi_change": 147503,
+        "long_short_ratio": 2.05
       },
       "weekly_data": [
-        {
-          "date": "2023-02-28",
-          "mm_long": 238553,
-          "mm_short": 66336,
-          "mm_spreading": 532138,
-          "prod_long": 561793,
-          "prod_short": 547442,
-          "other_long": 118712,
-          "other_short": 40478,
-          "open_interest": 2175203,
-          "mm_net": 172217,
-          "prod_net": 14351,
-          "other_net": 78234,
-          "mm_net_change": 0,
-          "prod_net_change": 0,
-          "other_net_change": 0,
-          "oi_change": 0
-        },
         {
           "date": "2023-03-07",
           "mm_long": 232357,
@@ -21647,10 +21647,10 @@
           "mm_net": 176093,
           "prod_net": 10066,
           "other_net": 62690,
-          "mm_net_change": 3876,
-          "prod_net_change": -4285,
-          "other_net_change": -15544,
-          "oi_change": 20233
+          "mm_net_change": 0,
+          "prod_net_change": 0,
+          "other_net_change": 0,
+          "oi_change": 0
         },
         {
           "date": "2023-03-14",
@@ -24423,6 +24423,24 @@
           "prod_net_change": -6158,
           "other_net_change": 23087,
           "oi_change": -103125
+        },
+        {
+          "date": "2026-02-24",
+          "mm_long": 191809,
+          "mm_short": 93622,
+          "mm_spreading": 571490,
+          "prod_long": 611101,
+          "prod_short": 468313,
+          "other_long": 166794,
+          "other_short": 24016,
+          "open_interest": 2724561,
+          "mm_net": 98187,
+          "prod_net": 142788,
+          "other_net": 142778,
+          "mm_net_change": 16968,
+          "prod_net_change": -25111,
+          "other_net_change": 24227,
+          "oi_change": 147503
         }
       ]
     },
@@ -24430,34 +24448,16 @@
       "name": "棕榈油",
       "name_en": "PALM OIL (CME)",
       "summary": {
-        "latest_date": "2026-02-17",
-        "mm_net": 840,
-        "prod_net": 2028,
-        "open_interest": 28794,
-        "mm_net_change": -540,
-        "prod_net_change": -3294,
-        "oi_change": 1520,
-        "long_short_ratio": 840.0
+        "latest_date": "2026-02-24",
+        "mm_net": 800,
+        "prod_net": 2278,
+        "open_interest": 29704,
+        "mm_net_change": -40,
+        "prod_net_change": 250,
+        "oi_change": 910,
+        "long_short_ratio": 800.0
       },
       "weekly_data": [
-        {
-          "date": "2023-02-28",
-          "mm_long": 120,
-          "mm_short": 0,
-          "mm_spreading": 0,
-          "prod_long": 37931,
-          "prod_short": 22925,
-          "other_long": 3420,
-          "other_short": 10745,
-          "open_interest": 46876,
-          "mm_net": 120,
-          "prod_net": 15006,
-          "other_net": -7325,
-          "mm_net_change": 0,
-          "prod_net_change": 0,
-          "other_net_change": 0,
-          "oi_change": 0
-        },
         {
           "date": "2023-03-07",
           "mm_long": 160,
@@ -24471,10 +24471,10 @@
           "mm_net": 160,
           "prod_net": 14965,
           "other_net": -6845,
-          "mm_net_change": 40,
-          "prod_net_change": -41,
-          "other_net_change": 480,
-          "oi_change": -1091
+          "mm_net_change": 0,
+          "prod_net_change": 0,
+          "other_net_change": 0,
+          "oi_change": 0
         },
         {
           "date": "2023-03-14",
@@ -27247,6 +27247,24 @@
           "prod_net_change": -3294,
           "other_net_change": 2820,
           "oi_change": 1520
+        },
+        {
+          "date": "2026-02-24",
+          "mm_long": 800,
+          "mm_short": 0,
+          "mm_spreading": 340,
+          "prod_long": 23834,
+          "prod_short": 21556,
+          "other_long": 980,
+          "other_short": 240,
+          "open_interest": 29704,
+          "mm_net": 800,
+          "prod_net": 2278,
+          "other_net": 740,
+          "mm_net_change": -40,
+          "prod_net_change": 250,
+          "other_net_change": 1680,
+          "oi_change": 910
         }
       ]
     }
@@ -27308,34 +27326,16 @@
       "name": "欧元",
       "name_en": "EURO FX (CME)",
       "summary": {
-        "latest_date": "2026-02-17",
-        "mm_net": 9995,
-        "prod_net": 436947,
-        "open_interest": 1041235,
-        "mm_net_change": -7313,
-        "prod_net_change": 2613,
-        "oi_change": -10568,
-        "long_short_ratio": 1.11
+        "latest_date": "2026-02-24",
+        "mm_net": -404,
+        "prod_net": 420389,
+        "open_interest": 1052660,
+        "mm_net_change": -10399,
+        "prod_net_change": -16558,
+        "oi_change": 11425,
+        "long_short_ratio": 1.0
       },
       "weekly_data": [
-        {
-          "date": "2023-02-28",
-          "mm_long": 71907,
-          "mm_short": 59506,
-          "mm_spreading": 94477,
-          "prod_long": 524519,
-          "prod_short": 80348,
-          "other_long": 44152,
-          "other_short": 574298,
-          "open_interest": 927384,
-          "mm_net": 12401,
-          "prod_net": 444171,
-          "other_net": -530146,
-          "mm_net_change": 0,
-          "prod_net_change": 0,
-          "other_net_change": 0,
-          "oi_change": 0
-        },
         {
           "date": "2023-03-07",
           "mm_long": 69701,
@@ -27349,10 +27349,10 @@
           "mm_net": 7601,
           "prod_net": 434043,
           "other_net": -521413,
-          "mm_net_change": -4800,
-          "prod_net_change": -10128,
-          "other_net_change": 8733,
-          "oi_change": -15663
+          "mm_net_change": 0,
+          "prod_net_change": 0,
+          "other_net_change": 0,
+          "oi_change": 0
         },
         {
           "date": "2023-03-14",
@@ -30125,6 +30125,24 @@
           "prod_net_change": 2613,
           "other_net_change": 7215,
           "oi_change": -10568
+        },
+        {
+          "date": "2026-02-24",
+          "mm_long": 92535,
+          "mm_short": 92939,
+          "mm_spreading": 110699,
+          "prod_long": 559296,
+          "prod_short": 138907,
+          "other_long": 56616,
+          "other_short": 546289,
+          "open_interest": 1052660,
+          "mm_net": -404,
+          "prod_net": 420389,
+          "other_net": -489673,
+          "mm_net_change": -10399,
+          "prod_net_change": -16558,
+          "other_net_change": 27711,
+          "oi_change": 11425
         }
       ]
     },
@@ -30132,34 +30150,16 @@
       "name": "英镑",
       "name_en": "BRITISH POUND (CME)",
       "summary": {
-        "latest_date": "2026-02-17",
-        "mm_net": 44849,
-        "prod_net": -92417,
-        "open_interest": 266433,
-        "mm_net_change": -5278,
-        "prod_net_change": -14057,
-        "oi_change": 11024,
-        "long_short_ratio": 2.44
+        "latest_date": "2026-02-24",
+        "mm_net": 40690,
+        "prod_net": -108328,
+        "open_interest": 271844,
+        "mm_net_change": -4159,
+        "prod_net_change": -15911,
+        "oi_change": 5411,
+        "long_short_ratio": 2.38
       },
       "weekly_data": [
-        {
-          "date": "2023-02-28",
-          "mm_long": 61508,
-          "mm_short": 46454,
-          "mm_spreading": 36475,
-          "prod_long": 30954,
-          "prod_short": 84375,
-          "other_long": 77034,
-          "other_short": 24797,
-          "open_interest": 249620,
-          "mm_net": 15054,
-          "prod_net": -53421,
-          "other_net": 52237,
-          "mm_net_change": 0,
-          "prod_net_change": 0,
-          "other_net_change": 0,
-          "oi_change": 0
-        },
         {
           "date": "2023-03-07",
           "mm_long": 70769,
@@ -30173,10 +30173,10 @@
           "mm_net": 16116,
           "prod_net": -50908,
           "other_net": 52206,
-          "mm_net_change": 1062,
-          "prod_net_change": 2513,
-          "other_net_change": -31,
-          "oi_change": 3563
+          "mm_net_change": 0,
+          "prod_net_change": 0,
+          "other_net_change": 0,
+          "oi_change": 0
         },
         {
           "date": "2023-03-14",
@@ -32949,6 +32949,24 @@
           "prod_net_change": -14057,
           "other_net_change": 24785,
           "oi_change": 11024
+        },
+        {
+          "date": "2026-02-24",
+          "mm_long": 70215,
+          "mm_short": 29525,
+          "mm_spreading": 28122,
+          "prod_long": 36448,
+          "prod_short": 144776,
+          "other_long": 77530,
+          "other_short": 11048,
+          "open_interest": 271844,
+          "mm_net": 40690,
+          "prod_net": -108328,
+          "other_net": 66482,
+          "mm_net_change": -4159,
+          "prod_net_change": -15911,
+          "other_net_change": 24610,
+          "oi_change": 5411
         }
       ]
     },
@@ -32956,34 +32974,16 @@
       "name": "日元",
       "name_en": "JAPANESE YEN (CME)",
       "summary": {
-        "latest_date": "2026-02-17",
-        "mm_net": -29051,
-        "prod_net": 40624,
-        "open_interest": 390994,
-        "mm_net_change": 19635,
-        "prod_net_change": 14816,
-        "oi_change": 16868,
+        "latest_date": "2026-02-24",
+        "mm_net": -29623,
+        "prod_net": 31950,
+        "open_interest": 396993,
+        "mm_net_change": -572,
+        "prod_net_change": -8674,
+        "oi_change": 5999,
         "long_short_ratio": 0.74
       },
       "weekly_data": [
-        {
-          "date": "2023-02-28",
-          "mm_long": 18374,
-          "mm_short": 55913,
-          "mm_spreading": 27398,
-          "prod_long": 77319,
-          "prod_short": 77793,
-          "other_long": 58825,
-          "other_short": 10487,
-          "open_interest": 231916,
-          "mm_net": -37539,
-          "prod_net": -474,
-          "other_net": 48338,
-          "mm_net_change": 0,
-          "prod_net_change": 0,
-          "other_net_change": 0,
-          "oi_change": 0
-        },
         {
           "date": "2023-03-07",
           "mm_long": 17930,
@@ -32997,10 +32997,10 @@
           "mm_net": -43442,
           "prod_net": 674,
           "other_net": 55959,
-          "mm_net_change": -5903,
-          "prod_net_change": 1148,
-          "other_net_change": 7621,
-          "oi_change": 452
+          "mm_net_change": 0,
+          "prod_net_change": 0,
+          "other_net_change": 0,
+          "oi_change": 0
         },
         {
           "date": "2023-03-14",
@@ -35773,6 +35773,24 @@
           "prod_net_change": 14816,
           "other_net_change": -40624,
           "oi_change": 16868
+        },
+        {
+          "date": "2026-02-24",
+          "mm_long": 85723,
+          "mm_short": 115346,
+          "mm_spreading": 28792,
+          "prod_long": 75921,
+          "prod_short": 43971,
+          "other_long": 37024,
+          "other_short": 106225,
+          "open_interest": 396993,
+          "mm_net": -29623,
+          "prod_net": 31950,
+          "other_net": -69201,
+          "mm_net_change": -572,
+          "prod_net_change": -8674,
+          "other_net_change": 13823,
+          "oi_change": 5999
         }
       ]
     },
@@ -35780,34 +35798,16 @@
       "name": "澳元",
       "name_en": "AUSTRALIAN DOLLAR (CME)",
       "summary": {
-        "latest_date": "2026-02-17",
-        "mm_net": 68641,
-        "prod_net": 2666,
-        "open_interest": 293601,
-        "mm_net_change": 4967,
-        "prod_net_change": 15764,
-        "oi_change": 13577,
-        "long_short_ratio": 3.02
+        "latest_date": "2026-02-24",
+        "mm_net": 61887,
+        "prod_net": 11621,
+        "open_interest": 280107,
+        "mm_net_change": -6754,
+        "prod_net_change": 8955,
+        "oi_change": -13494,
+        "long_short_ratio": 3.17
       },
       "weekly_data": [
-        {
-          "date": "2023-02-28",
-          "mm_long": 25795,
-          "mm_short": 22075,
-          "mm_spreading": 14656,
-          "prod_long": 50780,
-          "prod_short": 66482,
-          "other_long": 22137,
-          "other_short": 9929,
-          "open_interest": 141504,
-          "mm_net": 3720,
-          "prod_net": -15702,
-          "other_net": 12208,
-          "mm_net_change": 0,
-          "prod_net_change": 0,
-          "other_net_change": 0,
-          "oi_change": 0
-        },
         {
           "date": "2023-03-07",
           "mm_long": 44396,
@@ -35821,10 +35821,10 @@
           "mm_net": 11297,
           "prod_net": -25455,
           "other_net": 21275,
-          "mm_net_change": 7577,
-          "prod_net_change": -9753,
-          "other_net_change": 9067,
-          "oi_change": 25709
+          "mm_net_change": 0,
+          "prod_net_change": 0,
+          "other_net_change": 0,
+          "oi_change": 0
         },
         {
           "date": "2023-03-14",
@@ -38597,6 +38597,24 @@
           "prod_net_change": 15764,
           "other_net_change": -23124,
           "oi_change": 13577
+        },
+        {
+          "date": "2026-02-24",
+          "mm_long": 90429,
+          "mm_short": 28542,
+          "mm_spreading": 27417,
+          "prod_long": 73936,
+          "prod_short": 62315,
+          "other_long": 18811,
+          "other_short": 126741,
+          "open_interest": 280107,
+          "mm_net": 61887,
+          "prod_net": 11621,
+          "other_net": -107930,
+          "mm_net_change": -6754,
+          "prod_net_change": 8955,
+          "other_net_change": 2538,
+          "oi_change": -13494
         }
       ]
     },
@@ -38604,34 +38622,16 @@
       "name": "加元",
       "name_en": "CANADIAN DOLLAR (CME)",
       "summary": {
-        "latest_date": "2026-02-17",
-        "mm_net": -38264,
-        "prod_net": 70246,
-        "open_interest": 247838,
-        "mm_net_change": 7442,
-        "prod_net_change": 12298,
-        "oi_change": -2294,
-        "long_short_ratio": 0.37
+        "latest_date": "2026-02-24",
+        "mm_net": -33815,
+        "prod_net": 65522,
+        "open_interest": 248301,
+        "mm_net_change": 4449,
+        "prod_net_change": -4724,
+        "oi_change": 463,
+        "long_short_ratio": 0.41
       },
       "weekly_data": [
-        {
-          "date": "2023-02-28",
-          "mm_long": 25597,
-          "mm_short": 35188,
-          "mm_spreading": 19173,
-          "prod_long": 21889,
-          "prod_short": 76102,
-          "other_long": 58861,
-          "other_short": 3869,
-          "open_interest": 181797,
-          "mm_net": -9591,
-          "prod_net": -54213,
-          "other_net": 54992,
-          "mm_net_change": 0,
-          "prod_net_change": 0,
-          "other_net_change": 0,
-          "oi_change": 0
-        },
         {
           "date": "2023-03-07",
           "mm_long": 53904,
@@ -38645,10 +38645,10 @@
           "mm_net": 8670,
           "prod_net": -69875,
           "other_net": 59948,
-          "mm_net_change": 18261,
-          "prod_net_change": -15662,
-          "other_net_change": 4956,
-          "oi_change": 39282
+          "mm_net_change": 0,
+          "prod_net_change": 0,
+          "other_net_change": 0,
+          "oi_change": 0
         },
         {
           "date": "2023-03-14",
@@ -41421,6 +41421,24 @@
           "prod_net_change": 12298,
           "other_net_change": -17550,
           "oi_change": -2294
+        },
+        {
+          "date": "2026-02-24",
+          "mm_long": 23813,
+          "mm_short": 57628,
+          "mm_spreading": 20074,
+          "prod_long": 106850,
+          "prod_short": 41328,
+          "other_long": 34654,
+          "other_short": 86374,
+          "open_interest": 248301,
+          "mm_net": -33815,
+          "prod_net": 65522,
+          "other_net": -51720,
+          "mm_net_change": 4449,
+          "prod_net_change": -4724,
+          "other_net_change": 3164,
+          "oi_change": 463
         }
       ]
     },
@@ -41428,34 +41446,16 @@
       "name": "瑞郎",
       "name_en": "SWISS FRANC (CME)",
       "summary": {
-        "latest_date": "2026-02-17",
-        "mm_net": 2653,
-        "prod_net": -53871,
-        "open_interest": 110299,
-        "mm_net_change": 3564,
-        "prod_net_change": -1301,
-        "oi_change": 3483,
-        "long_short_ratio": 1.47
+        "latest_date": "2026-02-24",
+        "mm_net": 3882,
+        "prod_net": -55151,
+        "open_interest": 111788,
+        "mm_net_change": 1229,
+        "prod_net_change": -1280,
+        "oi_change": 1489,
+        "long_short_ratio": 1.57
       },
       "weekly_data": [
-        {
-          "date": "2023-02-28",
-          "mm_long": 10835,
-          "mm_short": 10996,
-          "mm_spreading": 2107,
-          "prod_long": 3154,
-          "prod_short": 11152,
-          "other_long": 16735,
-          "other_short": 0,
-          "open_interest": 45611,
-          "mm_net": -161,
-          "prod_net": -7998,
-          "other_net": 16735,
-          "mm_net_change": 0,
-          "prod_net_change": 0,
-          "other_net_change": 0,
-          "oi_change": 0
-        },
         {
           "date": "2023-03-07",
           "mm_long": 13049,
@@ -41469,10 +41469,10 @@
           "mm_net": 1135,
           "prod_net": -7882,
           "other_net": 15663,
-          "mm_net_change": 1296,
-          "prod_net_change": 116,
-          "other_net_change": -1072,
-          "oi_change": 5372
+          "mm_net_change": 0,
+          "prod_net_change": 0,
+          "other_net_change": 0,
+          "oi_change": 0
         },
         {
           "date": "2023-03-14",
@@ -44245,6 +44245,24 @@
           "prod_net_change": -1301,
           "other_net_change": -481,
           "oi_change": 3483
+        },
+        {
+          "date": "2026-02-24",
+          "mm_long": 10646,
+          "mm_short": 6764,
+          "mm_spreading": 12981,
+          "prod_long": 4910,
+          "prod_short": 60061,
+          "other_long": 57906,
+          "other_short": 8611,
+          "open_interest": 111788,
+          "mm_net": 3882,
+          "prod_net": -55151,
+          "other_net": 49295,
+          "mm_net_change": 1229,
+          "prod_net_change": -1280,
+          "other_net_change": 1922,
+          "oi_change": 1489
         }
       ]
     },
@@ -44252,34 +44270,16 @@
       "name": "比特币",
       "name_en": "BITCOIN (CME)",
       "summary": {
-        "latest_date": "2026-02-17",
-        "mm_net": -9185,
-        "prod_net": 5939,
-        "open_interest": 24753,
-        "mm_net_change": 631,
-        "prod_net_change": -566,
-        "oi_change": -713,
-        "long_short_ratio": 0.3
+        "latest_date": "2026-02-24",
+        "mm_net": -8600,
+        "prod_net": 5719,
+        "open_interest": 24540,
+        "mm_net_change": 585,
+        "prod_net_change": -220,
+        "oi_change": -213,
+        "long_short_ratio": 0.32
       },
       "weekly_data": [
-        {
-          "date": "2023-02-28",
-          "mm_long": 4527,
-          "mm_short": 6150,
-          "mm_spreading": 1167,
-          "prod_long": 7206,
-          "prod_short": 240,
-          "other_long": 369,
-          "other_short": 5281,
-          "open_interest": 16813,
-          "mm_net": -1623,
-          "prod_net": 6966,
-          "other_net": -4912,
-          "mm_net_change": 0,
-          "prod_net_change": 0,
-          "other_net_change": 0,
-          "oi_change": 0
-        },
         {
           "date": "2023-03-07",
           "mm_long": 2341,
@@ -44293,10 +44293,10 @@
           "mm_net": -2956,
           "prod_net": 6332,
           "other_net": -3911,
-          "mm_net_change": -1333,
-          "prod_net_change": -634,
-          "other_net_change": 1001,
-          "oi_change": -2206
+          "mm_net_change": 0,
+          "prod_net_change": 0,
+          "other_net_change": 0,
+          "oi_change": 0
         },
         {
           "date": "2023-03-14",
@@ -47069,6 +47069,24 @@
           "prod_net_change": -566,
           "other_net_change": -15,
           "oi_change": -713
+        },
+        {
+          "date": "2026-02-24",
+          "mm_long": 3998,
+          "mm_short": 12598,
+          "mm_spreading": 3739,
+          "prod_long": 6663,
+          "prod_short": 944,
+          "other_long": 5767,
+          "other_short": 2192,
+          "open_interest": 24540,
+          "mm_net": -8600,
+          "prod_net": 5719,
+          "other_net": 3575,
+          "mm_net_change": 585,
+          "prod_net_change": -220,
+          "other_net_change": -40,
+          "oi_change": -213
         }
       ]
     },
@@ -47076,34 +47094,16 @@
       "name": "标普500",
       "name_en": "S&P 500 (CME)",
       "summary": {
-        "latest_date": "2026-02-17",
-        "mm_net": -451647,
-        "prod_net": 968659,
-        "open_interest": 2712335,
-        "mm_net_change": -36992,
-        "prod_net_change": 47647,
-        "oi_change": 69087,
-        "long_short_ratio": 0.2
+        "latest_date": "2026-02-24",
+        "mm_net": -465965,
+        "prod_net": 1005549,
+        "open_interest": 2709230,
+        "mm_net_change": -14318,
+        "prod_net_change": 36890,
+        "oi_change": -3105,
+        "long_short_ratio": 0.19
       },
       "weekly_data": [
-        {
-          "date": "2023-02-28",
-          "mm_long": 35088,
-          "mm_short": 90872,
-          "mm_spreading": 181058,
-          "prod_long": 189939,
-          "prod_short": 92683,
-          "other_long": 61429,
-          "other_short": 81023,
-          "open_interest": 622294,
-          "mm_net": -55784,
-          "prod_net": 97256,
-          "other_net": -19594,
-          "mm_net_change": 0,
-          "prod_net_change": 0,
-          "other_net_change": 0,
-          "oi_change": 0
-        },
         {
           "date": "2023-03-07",
           "mm_long": 30622,
@@ -47117,10 +47117,10 @@
           "mm_net": -57324,
           "prod_net": 101954,
           "other_net": -13504,
-          "mm_net_change": -1540,
-          "prod_net_change": 4698,
-          "other_net_change": 6090,
-          "oi_change": 5852
+          "mm_net_change": 0,
+          "prod_net_change": 0,
+          "other_net_change": 0,
+          "oi_change": 0
         },
         {
           "date": "2023-03-14",
@@ -49893,6 +49893,24 @@
           "prod_net_change": 47647,
           "other_net_change": 11792,
           "oi_change": 69087
+        },
+        {
+          "date": "2026-02-24",
+          "mm_long": 111948,
+          "mm_short": 577913,
+          "mm_spreading": 559317,
+          "prod_long": 1196505,
+          "prod_short": 190956,
+          "other_long": 138961,
+          "other_short": 804478,
+          "open_interest": 2709230,
+          "mm_net": -465965,
+          "prod_net": 1005549,
+          "other_net": -665517,
+          "mm_net_change": -14318,
+          "prod_net_change": 36890,
+          "other_net_change": -10740,
+          "oi_change": -3105
         }
       ]
     },
@@ -49900,34 +49918,16 @@
       "name": "纳斯达克100",
       "name_en": "NASDAQ-100 (CME)",
       "summary": {
-        "latest_date": "2026-02-17",
-        "mm_net": -16684,
-        "prod_net": 73924,
-        "open_interest": 330051,
-        "mm_net_change": -5424,
-        "prod_net_change": 2190,
-        "oi_change": 17780,
-        "long_short_ratio": 0.79
+        "latest_date": "2026-02-24",
+        "mm_net": -22303,
+        "prod_net": 70067,
+        "open_interest": 323040,
+        "mm_net_change": -5619,
+        "prod_net_change": -3857,
+        "oi_change": -7011,
+        "long_short_ratio": 0.7
       },
       "weekly_data": [
-        {
-          "date": "2023-02-28",
-          "mm_long": 11444,
-          "mm_short": 17454,
-          "mm_spreading": 8710,
-          "prod_long": 15394,
-          "prod_short": 10007,
-          "other_long": 15082,
-          "other_short": 7435,
-          "open_interest": 62352,
-          "mm_net": -6010,
-          "prod_net": 5387,
-          "other_net": 7647,
-          "mm_net_change": 0,
-          "prod_net_change": 0,
-          "other_net_change": 0,
-          "oi_change": 0
-        },
         {
           "date": "2023-03-07",
           "mm_long": 11457,
@@ -49941,10 +49941,10 @@
           "mm_net": -5672,
           "prod_net": 5360,
           "other_net": 7180,
-          "mm_net_change": 338,
-          "prod_net_change": -27,
-          "other_net_change": -467,
-          "oi_change": -845
+          "mm_net_change": 0,
+          "prod_net_change": 0,
+          "other_net_change": 0,
+          "oi_change": 0
         },
         {
           "date": "2023-03-14",
@@ -52717,6 +52717,24 @@
           "prod_net_change": 2190,
           "other_net_change": 6149,
           "oi_change": 17780
+        },
+        {
+          "date": "2026-02-24",
+          "mm_long": 53080,
+          "mm_short": 75383,
+          "mm_spreading": 39171,
+          "prod_long": 107695,
+          "prod_short": 37628,
+          "other_long": 48637,
+          "other_short": 101769,
+          "open_interest": 323040,
+          "mm_net": -22303,
+          "prod_net": 70067,
+          "other_net": -53132,
+          "mm_net_change": -5619,
+          "prod_net_change": -3857,
+          "other_net_change": 12423,
+          "oi_change": -7011
         }
       ]
     },
@@ -52724,34 +52742,16 @@
       "name": "罗素2000",
       "name_en": "RUSSELL 2000 (CME)",
       "summary": {
-        "latest_date": "2026-02-17",
-        "mm_net": -26908,
-        "prod_net": 56154,
-        "open_interest": 410023,
-        "mm_net_change": 3079,
-        "prod_net_change": 5716,
-        "oi_change": -17103,
-        "long_short_ratio": 0.73
+        "latest_date": "2026-02-24",
+        "mm_net": -36918,
+        "prod_net": 56122,
+        "open_interest": 411611,
+        "mm_net_change": -10010,
+        "prod_net_change": -32,
+        "oi_change": 1588,
+        "long_short_ratio": 0.66
       },
       "weekly_data": [
-        {
-          "date": "2023-02-28",
-          "mm_long": 74260,
-          "mm_short": 117667,
-          "mm_spreading": 17519,
-          "prod_long": 185855,
-          "prod_short": 167411,
-          "other_long": 73500,
-          "other_short": 45983,
-          "open_interest": 449490,
-          "mm_net": -43407,
-          "prod_net": 18444,
-          "other_net": 27517,
-          "mm_net_change": 0,
-          "prod_net_change": 0,
-          "other_net_change": 0,
-          "oi_change": 0
-        },
         {
           "date": "2023-03-07",
           "mm_long": 69813,
@@ -52765,10 +52765,10 @@
           "mm_net": -50316,
           "prod_net": 16631,
           "other_net": 35514,
-          "mm_net_change": -6909,
-          "prod_net_change": -1813,
-          "other_net_change": 7997,
-          "oi_change": 758
+          "mm_net_change": 0,
+          "prod_net_change": 0,
+          "other_net_change": 0,
+          "oi_change": 0
         },
         {
           "date": "2023-03-14",
@@ -55541,6 +55541,24 @@
           "prod_net_change": 5716,
           "other_net_change": 1280,
           "oi_change": -17103
+        },
+        {
+          "date": "2026-02-24",
+          "mm_long": 71652,
+          "mm_short": 108570,
+          "mm_spreading": 16968,
+          "prod_long": 170820,
+          "prod_short": 114698,
+          "other_long": 80518,
+          "other_short": 102955,
+          "open_interest": 411611,
+          "mm_net": -36918,
+          "prod_net": 56122,
+          "other_net": -22437,
+          "mm_net_change": -10010,
+          "prod_net_change": -32,
+          "other_net_change": 13719,
+          "oi_change": 1588
         }
       ]
     },
@@ -55548,34 +55566,16 @@
       "name": "VIX",
       "name_en": "VIX (CBOE)",
       "summary": {
-        "latest_date": "2026-02-17",
-        "mm_net": -27164,
-        "prod_net": -25817,
-        "open_interest": 373970,
-        "mm_net_change": -4691,
-        "prod_net_change": 3806,
-        "oi_change": 2044,
-        "long_short_ratio": 0.64
+        "latest_date": "2026-02-24",
+        "mm_net": -29380,
+        "prod_net": -17380,
+        "open_interest": 359403,
+        "mm_net_change": -2216,
+        "prod_net_change": 8437,
+        "oi_change": -14567,
+        "long_short_ratio": 0.66
       },
       "weekly_data": [
-        {
-          "date": "2023-02-28",
-          "mm_long": 54540,
-          "mm_short": 88719,
-          "mm_spreading": 48210,
-          "prod_long": 90348,
-          "prod_short": 73585,
-          "other_long": 35717,
-          "other_short": 13785,
-          "open_interest": 336321,
-          "mm_net": -34179,
-          "prod_net": 16763,
-          "other_net": 21932,
-          "mm_net_change": 0,
-          "prod_net_change": 0,
-          "other_net_change": 0,
-          "oi_change": 0
-        },
         {
           "date": "2023-03-07",
           "mm_long": 60081,
@@ -55589,10 +55589,10 @@
           "mm_net": -23584,
           "prod_net": 2914,
           "other_net": 23775,
-          "mm_net_change": 10595,
-          "prod_net_change": -13849,
-          "other_net_change": 1843,
-          "oi_change": 20121
+          "mm_net_change": 0,
+          "prod_net_change": 0,
+          "other_net_change": 0,
+          "oi_change": 0
         },
         {
           "date": "2023-03-14",
@@ -58365,6 +58365,24 @@
           "prod_net_change": 3806,
           "other_net_change": 971,
           "oi_change": 2044
+        },
+        {
+          "date": "2026-02-24",
+          "mm_long": 57593,
+          "mm_short": 86973,
+          "mm_spreading": 63633,
+          "prod_long": 55602,
+          "prod_short": 72982,
+          "other_long": 92690,
+          "other_short": 37253,
+          "open_interest": 359403,
+          "mm_net": -29380,
+          "prod_net": -17380,
+          "other_net": 55437,
+          "mm_net_change": -2216,
+          "prod_net_change": 8437,
+          "other_net_change": -1608,
+          "oi_change": -14567
         }
       ]
     }
@@ -58429,75 +58447,67 @@
   "copper_curve": {
     "snapshot": [
       {
-        "month": "2026-02",
-        "price": 5.8605,
-        "contract": "HGG26.CMX"
-      },
-      {
         "month": "2026-03",
-        "price": 5.87,
+        "price": 6.014,
         "contract": "HGH26.CMX"
       },
       {
         "month": "2026-04",
-        "price": 5.8985,
+        "price": 6.033,
         "contract": "HGJ26.CMX"
       },
       {
         "month": "2026-05",
-        "price": 5.93,
+        "price": 6.061,
         "contract": "HGK26.CMX"
       },
       {
         "month": "2026-06",
-        "price": 5.9585,
+        "price": 6.0645,
         "contract": "HGM26.CMX"
       },
       {
         "month": "2026-07",
-        "price": 5.989,
+        "price": 6.1195,
         "contract": "HGN26.CMX"
       },
       {
         "month": "2026-08",
-        "price": 6.016,
+        "price": 6.1355,
         "contract": "HGQ26.CMX"
       },
       {
         "month": "2026-09",
-        "price": 6.042,
+        "price": 6.1725,
         "contract": "HGU26.CMX"
       },
       {
         "month": "2026-10",
-        "price": 6.071,
+        "price": 6.184,
         "contract": "HGV26.CMX"
       },
       {
         "month": "2026-11",
-        "price": 6.0965,
+        "price": 6.1785,
         "contract": "HGX26.CMX"
       },
       {
         "month": "2026-12",
-        "price": 6.119,
+        "price": 6.25,
         "contract": "HGZ26.CMX"
       },
       {
         "month": "2027-01",
-        "price": 6.075,
+        "price": 6.2585,
         "contract": "HGF27.CMX"
+      },
+      {
+        "month": "2027-02",
+        "price": 6.2825,
+        "contract": "HGG27.CMX"
       }
     ],
     "spread_history": [
-      {
-        "date": "2023-01-27",
-        "m1_price": 4.2235,
-        "m3_price": 4.237,
-        "m1_contract": "HGH26",
-        "m3_contract": "HGN26",
-        "spread": -0.0135
-      },
       {
         "date": "2023-02-03",
         "m1_price": 4.0855,
@@ -59772,11 +59782,19 @@
       },
       {
         "date": "2026-02-20",
-        "m1_price": 5.87,
-        "m3_price": 5.989,
+        "m1_price": 5.839,
+        "m3_price": 5.959,
         "m1_contract": "HGH26",
         "m3_contract": "HGN26",
-        "spread": -0.119
+        "spread": -0.12
+      },
+      {
+        "date": "2026-02-27",
+        "m1_price": 6.014,
+        "m3_price": 6.1195,
+        "m1_contract": "HGH26",
+        "m3_contract": "HGN26",
+        "spread": -0.1055
       }
     ]
   },
@@ -59784,58 +59802,63 @@
     "snapshot": [
       {
         "month": "2026-03",
-        "price": 100380.0,
+        "price": 103320.0,
         "contract": "CU2603"
       },
       {
         "month": "2026-04",
-        "price": 100630.0,
+        "price": 103920.0,
         "contract": "CU2604"
       },
       {
         "month": "2026-05",
-        "price": 100860.0,
+        "price": 104290.0,
         "contract": "CU2605"
       },
       {
         "month": "2026-06",
-        "price": 100850.0,
+        "price": 104350.0,
         "contract": "CU2606"
       },
       {
         "month": "2026-07",
-        "price": 100900.0,
+        "price": 104440.0,
         "contract": "CU2607"
       },
       {
         "month": "2026-08",
-        "price": 101080.0,
+        "price": 104540.0,
         "contract": "CU2608"
       },
       {
         "month": "2026-09",
-        "price": 100900.0,
+        "price": 104500.0,
         "contract": "CU2609"
       },
       {
         "month": "2026-10",
-        "price": 101030.0,
+        "price": 104400.0,
         "contract": "CU2610"
       },
       {
         "month": "2026-11",
-        "price": 100810.0,
+        "price": 104580.0,
         "contract": "CU2611"
       },
       {
         "month": "2026-12",
-        "price": 101010.0,
+        "price": 104630.0,
         "contract": "CU2612"
       },
       {
         "month": "2027-01",
-        "price": 101190.0,
+        "price": 104550.0,
         "contract": "CU2701"
+      },
+      {
+        "month": "2027-02",
+        "price": 104450.0,
+        "contract": "CU2702"
       }
     ],
     "spread_history": [
@@ -61150,6 +61173,14 @@
         "m1_contract": "CU2603",
         "m3_contract": "CU2609",
         "spread": -520.0
+      },
+      {
+        "date": "2026-02-27",
+        "m1_price": 103320.0,
+        "m3_price": 104500.0,
+        "m1_contract": "CU2603",
+        "m3_contract": "CU2609",
+        "spread": -1180.0
       }
     ],
     "inventory_history": [
@@ -61165,7 +61196,7 @@
       }
     ]
   },
-  "updated_at": "2026-02-21 03:06:57",
+  "updated_at": "2026-02-27 23:24:59",
   "gvz": [
     {
       "date": "2023-01-03",
@@ -61986,6 +62017,11 @@
       "date": "2026-02-17",
       "close": 33.24,
       "gld_volume": 55033800
+    },
+    {
+      "date": "2026-02-24",
+      "close": 37.55,
+      "gld_volume": 64542700
     }
   ]
 }
