@@ -259,6 +259,18 @@
       <div class="chart-container"><canvas id="gvzChart"></canvas></div>
     </div>
 
+    <!-- OVX 图表：仅原油品种显示 -->
+    <div class="chart-card full oil-only" id="ovxComboCard" style="display:none">
+      <div class="chart-title" id="title-ovx-combo">OVX 波动率 vs 非商业净持仓</div>
+      <div class="chart-subtitle">OVX 上升 = 市场恐慌 | 观察波动率与投机持仓的背离关系</div>
+      <div class="chart-container tall"><canvas id="ovxComboChart"></canvas></div>
+    </div>
+    <div class="chart-card full oil-only" id="ovxCard" style="display:none">
+      <div class="chart-title" id="title-ovx">OVX 原油波动率指数</div>
+      <div class="chart-subtitle">蓝线：OVX（左轴） | 橙柱：USO 周成交量（右轴） | 灰色虚线为均值</div>
+      <div class="chart-container"><canvas id="ovxChart"></canvas></div>
+    </div>
+
     <!-- 铜期货期限结构：仅铜品种显示 -->
     <div class="chart-card full copper-only" id="copperCurveCard" style="display:none">
       <div class="chart-title">COPPER (COMEX) 铜 - 期货曲线（当前快照）</div>
@@ -419,6 +431,7 @@
       renderMetrics(data.summary);
       renderCharts(data.weekly_data);
       renderGVZ(data.weekly_data);
+      renderOVX(data.weekly_data);
       renderCopperCurve();
       renderSHFECopper();
       renderTable(data.weekly_data);
@@ -440,6 +453,8 @@
       document.getElementById('title-table').textContent     = `${tag} - 周度持仓变化明细`;
       document.getElementById('title-gvz-combo').textContent = `${tag} - GVZ 波动率 vs ${L.mm}净持仓`;
       document.getElementById('title-gvz').textContent       = `${tag} - GVZ 黄金波动率指数`;
+      document.getElementById('title-ovx-combo').textContent = `${tag} - OVX 波动率 vs ${L.mm}净持仓`;
+      document.getElementById('title-ovx').textContent       = `${tag} - OVX 原油波动率指数`;
 
       const changeSubtitle = currentMode === 'tff'
         ? '绿色增仓 / 红色减仓 | 虚线为中位数 | 交易商 = Dealer/Intermediary（做市商）'
@@ -732,6 +747,151 @@
               data: Array(aligned.length).fill(medianGldVol),
               type: 'line',
               borderColor: '#f59e0b',
+              borderDash: [6, 4],
+              borderWidth: 2,
+              pointRadius: 0,
+              fill: false,
+              yAxisID: 'y1',
+              order: 2
+            },
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: { legend: { position: 'bottom' } },
+          scales: {
+            y:  { type: 'linear', position: 'left',  ticks: { callback: v => v.toFixed(1) } },
+            y1: { type: 'linear', position: 'right', grid: { drawOnChartArea: false }, ticks: { callback: fmtAxis } }
+          }
+        }
+      });
+    }
+
+    function renderOVX(weeklyData) {
+      const isOil = currentMode === 'cot' && currentCommodity === 'wti';
+      document.getElementById('ovxComboCard').style.display = isOil ? '' : 'none';
+      document.getElementById('ovxCard').style.display = isOil ? '' : 'none';
+      if (!isOil || !ALL_DATA.ovx || !ALL_DATA.ovx.length) return;
+
+      // 将 OVX 按 COT 日期对齐（取最近一个周二的值）
+      const ovxMap = {};
+      ALL_DATA.ovx.forEach(d => { ovxMap[d.date] = d.close; });
+
+      const aligned = weeklyData.map(d => ({
+        date: d.date,
+        ovx: ovxMap[d.date] || null,
+        uso_volume: (ALL_DATA.ovx.find(o => o.date === d.date) || {}).uso_volume || null,
+        net: d.prod_net + d.mm_net + d.other_net
+      })).filter(d => d.ovx !== null);
+
+      if (aligned.length === 0) return;
+
+      const ovxValues = aligned.map(d => d.ovx).filter(v => v !== null);
+      const avgOVX = ovxValues.reduce((a, b) => a + b, 0) / ovxValues.length;
+      const sortedOVX = [...ovxValues].sort((a, b) => a - b);
+      const mid = Math.floor(sortedOVX.length / 2);
+      const medianOVX = sortedOVX.length % 2 === 0 ? (sortedOVX[mid - 1] + sortedOVX[mid]) / 2 : sortedOVX[mid];
+
+      const usoVolValues = aligned.map(d => d.uso_volume).filter(v => v !== null);
+      const sortedVol = [...usoVolValues].sort((a, b) => a - b);
+      const medianIdx = Math.floor(sortedVol.length / 2);
+      const medianUsoVol = sortedVol.length % 2 === 0 ? (sortedVol[medianIdx - 1] + sortedVol[medianIdx]) / 2 : sortedVol[medianIdx];
+
+      if (charts.ovxCombo) charts.ovxCombo.destroy();
+      if (charts.ovx) charts.ovx.destroy();
+
+      const L = getLabels();
+      // 图1：OVX vs 净持仓双轴
+      charts.ovxCombo = new Chart(document.getElementById('ovxComboChart'), {
+        type: 'line',
+        data: {
+          labels: aligned.map(d => d.date.slice(5)),
+          datasets: [
+            {
+              label: `${L.mm}净持仓`,
+              data: aligned.map(d => d.net),
+              borderColor: '#f59e0b',
+              backgroundColor: 'rgba(245,158,11,0.1)',
+              tension: 0.3,
+              fill: true,
+              pointRadius: 2,
+              pointBackgroundColor: aligned.map(d => d.net >= 0 ? '#22c55e' : '#ef4444'),
+              yAxisID: 'y1',
+              order: 1
+            },
+            {
+              label: 'OVX 波动率',
+              data: aligned.map(d => d.ovx),
+              borderColor: '#3b82f6',
+              backgroundColor: 'rgba(59,130,246,0.1)',
+              tension: 0.3,
+              fill: true,
+              pointRadius: 2,
+              pointBackgroundColor: aligned.map(d => d.ovx != null ? (d.ovx >= avgOVX ? '#3b82f6' : '#1e40af') : 'transparent'),
+              yAxisID: 'y',
+              order: 2
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: { legend: { position: 'bottom' } },
+          scales: {
+            y:  { type: 'linear', position: 'left',  title: { display: true, text: 'OVX 波动率' }, ticks: { callback: v => v.toFixed(1) } },
+            y1: { type: 'linear', position: 'right', title: { display: true, text: `${L.mm}净持仓` }, grid: { drawOnChartArea: false }, ticks: { callback: fmtAxis } }
+          }
+        }
+      });
+
+      // 图2：OVX 独立走势 + USO 成交量
+      charts.ovx = new Chart(document.getElementById('ovxChart'), {
+        type: 'line',
+        data: {
+          labels: aligned.map(d => d.date),
+          datasets: [
+            {
+              label: 'USO 周成交量',
+              data: aligned.map(d => d.uso_volume),
+              type: 'bar',
+              backgroundColor: aligned.map(d => d.uso_volume != null ? (d.uso_volume >= medianUsoVol ? '#f97316' : '#7c2d12') : 'transparent'),
+              yAxisID: 'y1',
+              order: 3
+            },
+            {
+              label: 'OVX',
+              data: aligned.map(d => d.ovx),
+              borderColor: '#2563eb',
+              backgroundColor: 'rgba(37,99,235,0.05)',
+              tension: 0.3,
+              fill: false,
+              pointRadius: 2,
+              pointBackgroundColor: aligned.map(d => d.ovx != null ? (d.ovx >= avgOVX ? '#3b82f6' : '#1d4ed8') : 'transparent'),
+              segment: {
+                borderColor: ctx => ctx.p1.parsed.y >= avgOVX ? '#3b82f6' : '#1d4ed8'
+              },
+              yAxisID: 'y',
+              order: 1
+            },
+            {
+              label: '均值 ' + avgOVX.toFixed(1),
+              data: Array(aligned.length).fill(parseFloat(avgOVX.toFixed(2))),
+              borderColor: '#888',
+              borderDash: [6, 4],
+              borderWidth: 2,
+              pointRadius: 0,
+              fill: false,
+              yAxisID: 'y',
+              order: 2
+            },
+            {
+              label: 'USO周成交量-中位数-' + fmtAxis(medianUsoVol),
+              data: Array(aligned.length).fill(medianUsoVol),
+              type: 'line',
+              borderColor: '#ea580c',
               borderDash: [6, 4],
               borderWidth: 2,
               pointRadius: 0,

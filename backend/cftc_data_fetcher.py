@@ -267,6 +267,49 @@ def fetch_gvz_data(start_year: int = 2023) -> list:
     return records
 
 
+def fetch_ovx_data(start_year: int = 2023) -> list:
+    """获取 OVX 原油波动率指数 与 USO 周成交量"""
+    print("\n正在获取 OVX 与 USO 成交量数据...")
+    start = f"{start_year}-01-01"
+    ovx_df = yf.download("^OVX", start=start, auto_adjust=True, progress=False)
+    uso_df = yf.download("USO",  start=start, auto_adjust=True, progress=False)
+
+    if ovx_df.empty:
+        print("  警告: OVX 数据获取失败")
+        return []
+
+    ovx_close = ovx_df["Close"].squeeze()
+    ovx_close.index = pd.to_datetime(ovx_close.index).tz_localize(None)
+
+    uso_vol = pd.Series(dtype=float)
+    if not uso_df.empty:
+        uso_vol = uso_df["Volume"].squeeze()
+        uso_vol.index = pd.to_datetime(uso_vol.index).tz_localize(None)
+        uso_vol = uso_vol.resample("W-TUE").sum()
+
+    start_dt = pd.Timestamp(start)
+    end_dt   = pd.Timestamp.today()
+    tuesdays = pd.date_range(start=start_dt, end=end_dt, freq="W-TUE")
+
+    records = []
+    for tue in tuesdays:
+        window = ovx_close[ovx_close.index <= tue]
+        if window.empty:
+            continue
+        ovx_val = round(float(window.iloc[-1]), 2)
+        uso_val = None
+        if tue in uso_vol.index:
+            uso_val = int(uso_vol[tue])
+        elif not uso_vol.empty:
+            w = uso_vol[uso_vol.index <= tue]
+            if not w.empty:
+                uso_val = int(w.iloc[-1])
+        records.append({"date": tue.strftime("%Y-%m-%d"), "close": ovx_val, "uso_volume": uso_val})
+
+    print(f"  成功: {len(records)} 周数据，最新: {records[-1]['date'] if records else 'N/A'}")
+    return records
+
+
 def _next_month(year: int, month: int):
     """返回下一个月的 (year, month)"""
     return (year + 1, 1) if month == 12 else (year, month + 1)
@@ -735,7 +778,24 @@ def main():
         else:
             result["gvz"] = []
 
-    # ── 6. 保存 ────────────────────────────────────────────────────────────
+    # ── 6. OVX 数据 ────────────────────────────────────────────────────────
+    ovx_records = fetch_ovx_data(start_year=2023)
+    if ovx_records:
+        result["ovx"] = ovx_records
+    else:
+        if os.path.exists(existing_fp):
+            try:
+                with open(existing_fp, "r", encoding="utf-8") as f:
+                    old_ovx = json.load(f).get("ovx", [])
+                result["ovx"] = old_ovx
+                if old_ovx:
+                    print(f"  使用旧 OVX 数据（{len(old_ovx)} 条）")
+            except Exception:
+                result["ovx"] = []
+        else:
+            result["ovx"] = []
+
+    # ── 7. 保存 ────────────────────────────────────────────────────────────
     print("\n[6/6] 保存数据...")
     save_to_json(result)
 
