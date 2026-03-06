@@ -35,5 +35,6 @@ jobs:
           git add data/cot_data.json
           git diff --staged --quiet && echo "No changes" || (
             git commit -m "chore: auto-update COT data $(date -u +%Y-%m-%d)" &&
+            git pull --rebase origin main &&
             git push
           )
