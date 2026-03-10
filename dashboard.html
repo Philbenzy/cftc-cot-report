@@ -559,7 +559,8 @@
               backgroundColor: 'rgba(59,130,246,0.1)',
               tension: 0.3,
               yAxisID: 'y',
-              order: 2
+              order: 2,
+              hidden: true
             },
             {
               label: `${L.mm}周变化`,
@@ -570,7 +571,7 @@
               borderWidth: 1,
               yAxisID: 'y1',
               order: 3
-            }
+            },
           ]
         },
         options: {
@@ -588,6 +589,7 @@
 
       // Other Reportable 净持仓变化
       const otherNetChanges = weeklyData.map(d => d.other_net_change ?? 0);
+      const otherNetData    = weeklyData.map(d => d.other_net);
       charts.change = new Chart(document.getElementById('changeChart'), {
         type: 'bar',
         data: {
@@ -598,7 +600,21 @@
               data: otherNetChanges,
               backgroundColor: otherNetChanges.map(v => v >= 0 ? 'rgba(212,175,55,0.7)' : 'rgba(239,68,68,0.7)'),
               borderColor: otherNetChanges.map(v => v >= 0 ? '#D4AF37' : '#ef4444'),
-              borderWidth: 1
+              borderWidth: 1,
+              yAxisID: 'y',
+              order: 2
+            },
+            {
+              label: '净持仓',
+              data: otherNetData,
+              type: 'line',
+              borderColor: '#a855f7',
+              backgroundColor: 'rgba(168,85,247,0.1)',
+              borderWidth: 2,
+              pointRadius: 0,
+              tension: 0.3,
+              yAxisID: 'y1',
+              order: 1
             }
           ]
         },
@@ -609,7 +625,7 @@
           plugins: { legend: { position: 'bottom' } },
           scales: {
             y:  { ticks: { callback: fmtAxis }, afterFit: s => { s.width = 62; } },
-            y1: { type: 'linear', position: 'right', ticks: { display: false }, grid: { display: false }, border: { display: false }, afterFit: s => { s.width = 52; } }
+            y1: { type: 'linear', position: 'right', ticks: { callback: fmtAxis }, grid: { display: false }, border: { display: false }, afterFit: s => { s.width = 52; } }
           }
         }
       });
