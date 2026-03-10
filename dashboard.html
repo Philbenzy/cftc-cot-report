@@ -103,6 +103,21 @@
     .mode-btn:hover { border-color: var(--blue); color: var(--text); }
     .mode-btn.active { background: var(--blue); border-color: var(--blue); color: #fff; font-weight: 600; }
 
+    .category-buttons { display: flex; gap: 8px; }
+    .cat-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-muted);
+      padding: 8px 16px;
+      font-family: inherit;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .cat-btn:hover { border-color: #22c55e; color: var(--text); }
+    .cat-btn.active { background: #22c55e; border-color: #22c55e; color: #000; font-weight: 600; }
+
     /* Header */
     .header {
       display: flex;
@@ -194,6 +209,15 @@
       <div class="mode-buttons">
         <button class="mode-btn active" data-mode="cot">商品 COT</button>
         <button class="mode-btn" data-mode="tff">外汇 & 加密 TFF</button>
+      </div>
+    </div>
+    <div class="control-group" id="categoryGroup">
+      <span class="control-label">品类</span>
+      <div class="category-buttons">
+        <button class="cat-btn active" data-cat="all">全部</button>
+        <button class="cat-btn" data-cat="metals">金属</button>
+        <button class="cat-btn" data-cat="energy">能源</button>
+        <button class="cat-btn" data-cat="agri">农产品</button>
       </div>
     </div>
     <div class="control-group">
@@ -311,6 +335,7 @@
     let currentCommodity = 'gold';
     let currentWeeks = 52;
     let currentMode = 'cot'; // 'cot' | 'tff'
+    let currentCategory = 'all'; // 'all' | 'metals' | 'energy' | 'agri'
     let charts = {};
 
     function getLabels() {
@@ -373,7 +398,12 @@
           document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
           currentMode = btn.dataset.mode;
-          // 切换模式时重置到该模式第一个品种
+          currentCategory = 'all';
+          document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+          document.querySelector('.cat-btn[data-cat="all"]').classList.add('active');
+          // 切换模式时显示/隐藏品类筛选
+          document.getElementById('categoryGroup').style.display =
+            currentMode === 'tff' ? 'none' : '';
           const list = currentMode === 'tff'
             ? ALL_DATA.tff_instrument_list
             : ALL_DATA.commodity_list;
@@ -382,12 +412,30 @@
           render();
         });
       });
+
+      document.querySelectorAll('.cat-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentCategory = btn.dataset.cat;
+          const filtered = getFilteredCommodityList();
+          currentCommodity = filtered.length ? filtered[0].code : '';
+          rebuildSelect();
+          render();
+        });
+      });
+    }
+
+    function getFilteredCommodityList() {
+      const list = ALL_DATA.commodity_list || [];
+      if (currentCategory === 'all') return list;
+      return list.filter(c => c.category === currentCategory);
     }
 
     function rebuildSelect() {
       const list = currentMode === 'tff'
         ? (ALL_DATA.tff_instrument_list || [])
-        : ALL_DATA.commodity_list;
+        : getFilteredCommodityList();
       const select = document.getElementById('commoditySelect');
       select.innerHTML = list.map(c =>
         `<option value="${c.code}">${c.name} (${c.name_en})</option>`

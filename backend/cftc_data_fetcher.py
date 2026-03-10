@@ -18,18 +18,40 @@ import akshare as ak
 
 
 # ── COT Disaggregated 商品品种配置 ───────────────────────────────────────────
+# category: metals | energy | agri
 COMMODITIES = {
-    "gold":      {"name": "黄金",     "name_en": "GOLD (COMEX)",           "pattern": r"^GOLD - COMMODITY EXCHANGE"},
-    "silver":    {"name": "白银",     "name_en": "SILVER (COMEX)",         "pattern": r"^SILVER - COMMODITY EXCHANGE"},
-    "copper":    {"name": "铜",       "name_en": "COPPER (COMEX)",         "pattern": r"^COPPER.* - COMMODITY EXCHANGE"},
-    "platinum":  {"name": "铂金",     "name_en": "PLATINUM (NYMEX)",       "pattern": r"^PLATINUM - NEW YORK MERCANTILE"},
-    "palladium": {"name": "钯金",     "name_en": "PALLADIUM (NYMEX)",      "pattern": r"^PALLADIUM - NEW YORK MERCANTILE"},
-    "micro_gold":{"name": "微型黄金", "name_en": "MICRO GOLD (COMEX)",     "pattern": r"^MICRO GOLD - COMMODITY EXCHANGE"},
-    "aluminum":  {"name": "铝",       "name_en": "ALUMINUM (COMEX)",       "pattern": r"^ALUMINUM - COMMODITY EXCHANGE"},
-    "cobalt":    {"name": "钴",       "name_en": "COBALT (COMEX)",         "pattern": r"^COBALT - COMMODITY EXCHANGE"},
-    "lithium":   {"name": "氢氧化锂", "name_en": "LITHIUM HYDROXIDE (COMEX)", "pattern": r"^LITHIUM HYDROXIDE - COMMODITY EXCHANGE"},
-    "wti":       {"name": "WTI原油",  "name_en": "WTI CRUDE OIL (NYMEX)", "pattern": r"^WTI-PHYSICAL - NEW YORK MERCANTILE"},
-    "palm_oil":  {"name": "棕榈油",   "name_en": "PALM OIL (CME)",         "pattern": r"^USD Malaysian Crude Palm Oil"},
+    # 金属
+    "gold":      {"name": "黄金",     "name_en": "GOLD (COMEX)",              "category": "metals", "pattern": r"^GOLD - COMMODITY EXCHANGE"},
+    "silver":    {"name": "白银",     "name_en": "SILVER (COMEX)",            "category": "metals", "pattern": r"^SILVER - COMMODITY EXCHANGE"},
+    "copper":    {"name": "铜",       "name_en": "COPPER (COMEX)",            "category": "metals", "pattern": r"^COPPER.* - COMMODITY EXCHANGE"},
+    "platinum":  {"name": "铂金",     "name_en": "PLATINUM (NYMEX)",          "category": "metals", "pattern": r"^PLATINUM - NEW YORK MERCANTILE"},
+    "palladium": {"name": "钯金",     "name_en": "PALLADIUM (NYMEX)",         "category": "metals", "pattern": r"^PALLADIUM - NEW YORK MERCANTILE"},
+    "micro_gold":{"name": "微型黄金", "name_en": "MICRO GOLD (COMEX)",        "category": "metals", "pattern": r"^MICRO GOLD - COMMODITY EXCHANGE"},
+    "aluminum":  {"name": "铝",       "name_en": "ALUMINUM (COMEX)",          "category": "metals", "pattern": r"^ALUMINUM - COMMODITY EXCHANGE"},
+    "cobalt":    {"name": "钴",       "name_en": "COBALT (COMEX)",            "category": "metals", "pattern": r"^COBALT - COMMODITY EXCHANGE"},
+    "lithium":   {"name": "氢氧化锂", "name_en": "LITHIUM HYDROXIDE (COMEX)", "category": "metals", "pattern": r"^LITHIUM HYDROXIDE - COMMODITY EXCHANGE"},
+    # 能源
+    "wti":       {"name": "WTI原油",  "name_en": "WTI CRUDE OIL (NYMEX)",    "category": "energy", "pattern": r"^WTI-PHYSICAL - NEW YORK MERCANTILE"},
+    "palm_oil":  {"name": "棕榈油",   "name_en": "PALM OIL (CME)",            "category": "energy", "pattern": r"^USD Malaysian Crude Palm Oil"},
+    # 农产品 - 谷物
+    "corn":         {"name": "玉米",       "name_en": "CORN (CBOT)",           "category": "agri", "pattern": r"^CORN - CHICAGO BOARD OF TRADE$"},
+    "soybeans":     {"name": "大豆",       "name_en": "SOYBEANS (CBOT)",       "category": "agri", "pattern": r"^SOYBEANS - CHICAGO BOARD OF TRADE$"},
+    "soybean_meal": {"name": "豆粕",       "name_en": "SOYBEAN MEAL (CBOT)",   "category": "agri", "pattern": r"^SOYBEAN MEAL - CHICAGO BOARD OF TRADE$"},
+    "soybean_oil":  {"name": "豆油",       "name_en": "SOYBEAN OIL (CBOT)",    "category": "agri", "pattern": r"^SOYBEAN OIL - CHICAGO BOARD OF TRADE$"},
+    "wheat_srw":    {"name": "软红冬小麦", "name_en": "WHEAT-SRW (CBOT)",      "category": "agri", "pattern": r"^WHEAT-SRW - CHICAGO BOARD OF TRADE$"},
+    "wheat_hrw":    {"name": "硬红冬小麦", "name_en": "WHEAT-HRW (KCBT)",      "category": "agri", "pattern": r"^WHEAT-HRW - CHICAGO BOARD OF TRADE$"},
+    "oats":         {"name": "燕麦",       "name_en": "OATS (CBOT)",           "category": "agri", "pattern": r"^OATS - CHICAGO BOARD OF TRADE$"},
+    "rough_rice":   {"name": "糙米",       "name_en": "ROUGH RICE (CBOT)",     "category": "agri", "pattern": r"^ROUGH RICE - CHICAGO BOARD OF TRADE$"},
+    # 农产品 - 软商品
+    "sugar":    {"name": "糖",   "name_en": "SUGAR NO.11 (ICE)", "category": "agri", "pattern": r"^SUGAR NO\. 11 - ICE FUTURES U\.S\."},
+    "coffee":   {"name": "咖啡", "name_en": "COFFEE C (ICE)",    "category": "agri", "pattern": r"^COFFEE C - ICE FUTURES U\.S\."},
+    "cotton":   {"name": "棉花", "name_en": "COTTON NO.2 (ICE)", "category": "agri", "pattern": r"^COTTON NO\. 2 - ICE FUTURES U\.S\."},
+    "cocoa":    {"name": "可可", "name_en": "COCOA (ICE)",        "category": "agri", "pattern": r"^COCOA - ICE FUTURES U\.S\."},
+    "oj":       {"name": "橙汁", "name_en": "OJ (ICE)",           "category": "agri", "pattern": r"^FRZN CONCENTRATED ORANGE JUICE - ICE FUTURES U\.S\."},
+    # 农产品 - 畜牧
+    "live_cattle":    {"name": "活牛",   "name_en": "LIVE CATTLE (CME)",    "category": "agri", "pattern": r"^LIVE CATTLE - CHICAGO MERCANTILE"},
+    "feeder_cattle":  {"name": "饲育牛", "name_en": "FEEDER CATTLE (CME)",  "category": "agri", "pattern": r"^FEEDER CATTLE - CHICAGO MERCANTILE"},
+    "lean_hogs":      {"name": "瘦猪肉", "name_en": "LEAN HOGS (CME)",      "category": "agri", "pattern": r"^LEAN HOGS - CHICAGO MERCANTILE"},
 }
 
 # ── TFF 外汇、加密货币及股指品种配置 ─────────────────────────────────────────
@@ -720,7 +742,7 @@ def main():
                 "name": config['name'], "name_en": config['name_en'],
                 "summary": calculate_summary(records), "weekly_data": records
             }
-            result["commodity_list"].append({"code": code, "name": config['name'], "name_en": config['name_en']})
+            result["commodity_list"].append({"code": code, "name": config['name'], "name_en": config['name_en'], "category": config.get('category', 'metals')})
             print(f"{len(records)} 周")
         except Exception as e:
             print(f"错误: {e}")
