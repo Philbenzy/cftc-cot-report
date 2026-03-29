@@ -1309,7 +1309,7 @@
         <div class="overview-row">
           <div class="overview-commodity-title">${c.name_en} &nbsp;${c.name}</div>
           <div class="overview-chart-wrap">
-            <div class="overview-chart-label">未平仓合约量（近12周）</div>
+            <div class="overview-chart-label">未平仓合约量（近1年）</div>
             <div class="overview-chart-container"><canvas id="ov_oi_${c.code}"></canvas></div>
           </div>
           <div class="overview-chart-wrap">
@@ -1330,18 +1330,19 @@
         if (!commodity) return;
 
         const recent = commodity.weekly_data.slice(-12);
-        const labels = recent.map(d => d.date.slice(5));
+        const yearly = commodity.weekly_data.slice(-52);
 
-        // 未平仓合约量
-        const oiData = recent.map(d => d.open_interest);
+        // 未平仓合约量（近52周）
+        const oiLabels = yearly.map(d => d.date.slice(5));
+        const oiData = yearly.map(d => d.open_interest);
         const medianOI = calcMedian(oiData);
         overviewCharts[`oi_${c.code}`] = new Chart(document.getElementById(`ov_oi_${c.code}`), {
           type: 'bar',
           data: {
-            labels,
+            labels: oiLabels,
             datasets: [
               { label: '未平仓合约', data: oiData, backgroundColor: oiData.map(v => v >= medianOI ? '#FFD700' : '#5c4a1f'), order: 2 },
-              { label: '中位数 ' + fmtAxis(medianOI), data: Array(labels.length).fill(medianOI), type: 'line', borderColor: '#FFD700', borderDash: [8, 4], borderWidth: 2, pointRadius: 0, fill: false, order: 1 }
+              { label: '中位数 ' + fmtAxis(medianOI), data: Array(oiLabels.length).fill(medianOI), type: 'line', borderColor: '#FFD700', borderDash: [8, 4], borderWidth: 2, pointRadius: 0, fill: false, order: 1 }
             ]
           },
           options: {
