@@ -118,6 +118,30 @@
     .cat-btn:hover { border-color: #22c55e; color: var(--text); }
     .cat-btn.active { background: #22c55e; border-color: #22c55e; color: #000; font-weight: 600; }
 
+    /* Overview Grid */
+    .overview-grid { display: grid; gap: 16px; margin-bottom: 24px; }
+    .overview-row {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .overview-commodity-title {
+      grid-column: span 2;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gold);
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2px;
+    }
+    .overview-chart-wrap { display: flex; flex-direction: column; gap: 6px; }
+    .overview-chart-label { font-size: 11px; color: var(--text-muted); }
+    .overview-chart-container { height: 180px; position: relative; }
+
     /* Header */
     .header {
       display: flex;
@@ -209,6 +233,8 @@
       <div class="mode-buttons">
         <button class="mode-btn active" data-mode="cot">商品 COT</button>
         <button class="mode-btn" data-mode="tff">外汇 & 加密 TFF</button>
+        <button class="mode-btn" data-mode="metals_overview">金属总览</button>
+        <button class="mode-btn" data-mode="agri_overview">农产品总览</button>
       </div>
     </div>
     <div class="control-group" id="categoryGroup">
@@ -220,13 +246,13 @@
         <button class="cat-btn" data-cat="agri">农产品</button>
       </div>
     </div>
-    <div class="control-group">
+    <div class="control-group" id="commodityGroup">
       <span class="control-label">品种</span>
       <div class="select-wrapper">
         <select id="commoditySelect"></select>
       </div>
     </div>
-    <div class="control-group">
+    <div class="control-group" id="timeGroup">
       <span class="control-label">时间范围</span>
       <div class="time-buttons">
         <button class="time-btn" data-weeks="13">3个月</button>
@@ -245,6 +271,7 @@
     <div class="update-time" id="updateTime"></div>
   </header>
 
+  <div id="mainContent">
   <div class="metrics" id="metrics"></div>
 
   <div class="charts">
@@ -329,14 +356,21 @@
     <div class="chart-title" id="title-table">周度持仓变化明细</div>
     <table id="dataTable"></table>
   </div>
+  </div><!-- /mainContent -->
+
+  <!-- Overview Section -->
+  <div id="overviewSection" style="display:none">
+    <div id="overviewGrid" class="overview-grid"></div>
+  </div>
 
   <script>
     let ALL_DATA = null;
     let currentCommodity = 'gold';
     let currentWeeks = 52;
-    let currentMode = 'cot'; // 'cot' | 'tff'
+    let currentMode = 'cot'; // 'cot' | 'tff' | 'metals_overview' | 'agri_overview'
     let currentCategory = 'all'; // 'all' | 'metals' | 'energy' | 'agri'
     let charts = {};
+    let overviewCharts = {};
 
     function getLabels() {
       return currentMode === 'tff' ? {
@@ -398,18 +432,28 @@
           document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
           currentMode = btn.dataset.mode;
-          currentCategory = 'all';
-          document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-          document.querySelector('.cat-btn[data-cat="all"]').classList.add('active');
-          // 切换模式时显示/隐藏品类筛选
-          document.getElementById('categoryGroup').style.display =
-            currentMode === 'tff' ? 'none' : '';
-          const list = currentMode === 'tff'
-            ? ALL_DATA.tff_instrument_list
-            : ALL_DATA.commodity_list;
-          currentCommodity = list.length ? list[0].code : '';
-          rebuildSelect();
-          render();
+
+          const isOverview = currentMode === 'metals_overview' || currentMode === 'agri_overview';
+          document.getElementById('mainContent').style.display = isOverview ? 'none' : '';
+          document.getElementById('overviewSection').style.display = isOverview ? '' : 'none';
+          document.getElementById('commodityGroup').style.display = isOverview ? 'none' : '';
+          document.getElementById('timeGroup').style.display = isOverview ? 'none' : '';
+
+          if (isOverview) {
+            document.getElementById('categoryGroup').style.display = 'none';
+            renderOverview();
+          } else {
+            currentCategory = 'all';
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector('.cat-btn[data-cat="all"]').classList.add('active');
+            document.getElementById('categoryGroup').style.display = currentMode === 'tff' ? 'none' : '';
+            const list = currentMode === 'tff'
+              ? ALL_DATA.tff_instrument_list
+              : ALL_DATA.commodity_list;
+            currentCommodity = list.length ? list[0].code : '';
+            rebuildSelect();
+            render();
+          }
         });
       });
 
@@ -1242,6 +1286,94 @@
             <td class="num ${r.oi_change > 0 ? 'pos' : r.oi_change < 0 ? 'neg' : ''}">${fmtChg(r.oi_change)}</td>
           </tr>`;
         }).join('')}</tbody>`;
+    }
+
+    function getOverviewCommodities() {
+      const list = ALL_DATA.commodity_list || [];
+      if (currentMode === 'metals_overview') {
+        return list.filter(c => c.category === 'metals' || c.code === 'wti');
+      } else if (currentMode === 'agri_overview') {
+        return list.filter(c => c.category === 'agri');
+      }
+      return [];
+    }
+
+    function renderOverview() {
+      Object.values(overviewCharts).forEach(c => c.destroy());
+      overviewCharts = {};
+
+      const commodities = getOverviewCommodities();
+      const grid = document.getElementById('overviewGrid');
+
+      grid.innerHTML = commodities.map(c => `
+        <div class="overview-row">
+          <div class="overview-commodity-title">${c.name_en} &nbsp;${c.name}</div>
+          <div class="overview-chart-wrap">
+            <div class="overview-chart-label">未平仓合约量（近12周）</div>
+            <div class="overview-chart-container"><canvas id="ov_oi_${c.code}"></canvas></div>
+          </div>
+          <div class="overview-chart-wrap">
+            <div class="overview-chart-label">管理基金多空持仓对比（近12周）</div>
+            <div class="overview-chart-container"><canvas id="ov_cmp_${c.code}"></canvas></div>
+          </div>
+        </div>
+      `).join('');
+
+      const calcMedian = arr => {
+        const s = [...arr].sort((a, b) => a - b);
+        const m = Math.floor(s.length / 2);
+        return s.length % 2 === 0 ? (s[m - 1] + s[m]) / 2 : s[m];
+      };
+
+      commodities.forEach(c => {
+        const commodity = ALL_DATA.commodities[c.code];
+        if (!commodity) return;
+
+        const recent = commodity.weekly_data.slice(-12);
+        const labels = recent.map(d => d.date.slice(5));
+
+        // 未平仓合约量
+        const oiData = recent.map(d => d.open_interest);
+        const medianOI = calcMedian(oiData);
+        overviewCharts[`oi_${c.code}`] = new Chart(document.getElementById(`ov_oi_${c.code}`), {
+          type: 'bar',
+          data: {
+            labels,
+            datasets: [
+              { label: '未平仓合约', data: oiData, backgroundColor: oiData.map(v => v >= medianOI ? '#FFD700' : '#5c4a1f'), order: 2 },
+              { label: '中位数 ' + fmtAxis(medianOI), data: Array(labels.length).fill(medianOI), type: 'line', borderColor: '#FFD700', borderDash: [8, 4], borderWidth: 2, pointRadius: 0, fill: false, order: 1 }
+            ]
+          },
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } } },
+            scales: { y: { ticks: { callback: fmtAxis, font: { size: 10 } }, grid: { color: '#2a2a2a' } }, x: { ticks: { font: { size: 10 } } } }
+          }
+        });
+
+        // 管理基金多空持仓对比
+        const longData  = recent.map(d => d.mm_long);
+        const shortData = recent.map(d => d.mm_short);
+        const medianLong  = calcMedian(longData);
+        const medianShort = calcMedian(shortData);
+        overviewCharts[`cmp_${c.code}`] = new Chart(document.getElementById(`ov_cmp_${c.code}`), {
+          type: 'bar',
+          data: {
+            labels,
+            datasets: [
+              { label: '多头', data: longData,  backgroundColor: longData.map(v  => v  >= medianLong  ? '#22c55e' : '#1a3d2b'), order: 2 },
+              { label: '空头', data: shortData, backgroundColor: shortData.map(v => v >= medianShort ? '#ef4444' : '#3d1a1a'), order: 2 },
+              { label: '多头中位数', data: Array(labels.length).fill(medianLong),  type: 'line', borderColor: '#22c55e', borderDash: [8, 4], borderWidth: 2, pointRadius: 0, fill: false, order: 1 },
+              { label: '空头中位数', data: Array(labels.length).fill(medianShort), type: 'line', borderColor: '#ef4444', borderDash: [8, 4], borderWidth: 2, pointRadius: 0, fill: false, order: 1 }
+            ]
+          },
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } } },
+            scales: { y: { ticks: { callback: fmtAxis, font: { size: 10 } }, grid: { color: '#2a2a2a' } }, x: { ticks: { font: { size: 10 } } } }
+          }
+        });
+      });
     }
 
     const FALLBACK_DATA = {
