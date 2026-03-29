@@ -1357,10 +1357,11 @@
         const shortData = recent.map(d => d.mm_short);
         const medianLong  = calcMedian(longData);
         const medianShort = calcMedian(shortData);
+        const recentLabels = recent.map(d => d.date.slice(5));
         overviewCharts[`cmp_${c.code}`] = new Chart(document.getElementById(`ov_cmp_${c.code}`), {
           type: 'bar',
           data: {
-            labels,
+            labels: recentLabels,
             datasets: [
               { label: '多头', data: longData,  backgroundColor: longData.map(v  => v  >= medianLong  ? '#22c55e' : '#1a3d2b'), order: 2 },
               { label: '空头', data: shortData, backgroundColor: shortData.map(v => v >= medianShort ? '#ef4444' : '#3d1a1a'), order: 2 },
