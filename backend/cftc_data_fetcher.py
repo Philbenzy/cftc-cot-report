@@ -27,7 +27,7 @@ COMMODITIES = {
     "platinum":  {"name": "铂金",     "name_en": "PLATINUM (NYMEX)",          "category": "metals", "pattern": r"^PLATINUM - NEW YORK MERCANTILE"},
     "palladium": {"name": "钯金",     "name_en": "PALLADIUM (NYMEX)",         "category": "metals", "pattern": r"^PALLADIUM - NEW YORK MERCANTILE"},
     "micro_gold":{"name": "微型黄金", "name_en": "MICRO GOLD (COMEX)",        "category": "metals", "pattern": r"^MICRO GOLD - COMMODITY EXCHANGE"},
-    "aluminum":  {"name": "铝",       "name_en": "ALUMINUM (COMEX)",          "category": "metals", "pattern": r"^ALUMINUM - COMMODITY EXCHANGE"},
+    "aluminum":  {"name": "铝",       "name_en": "ALUMINUM MWP (COMEX)",      "category": "metals", "pattern": r"^ALUMINUM MWP - COMMODITY EXCHANGE"},
     "cobalt":    {"name": "钴",       "name_en": "COBALT (COMEX)",            "category": "metals", "pattern": r"^COBALT - COMMODITY EXCHANGE"},
     "lithium":   {"name": "氢氧化锂", "name_en": "LITHIUM HYDROXIDE (COMEX)", "category": "metals", "pattern": r"^LITHIUM HYDROXIDE - COMMODITY EXCHANGE"},
     # 能源
