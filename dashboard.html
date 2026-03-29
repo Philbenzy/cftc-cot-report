@@ -1364,8 +1364,8 @@
             datasets: [
               { label: '多头', data: longData,  backgroundColor: longData.map(v  => v  >= medianLong  ? '#22c55e' : '#1a3d2b'), order: 2 },
               { label: '空头', data: shortData, backgroundColor: shortData.map(v => v >= medianShort ? '#ef4444' : '#3d1a1a'), order: 2 },
-              { label: '多头中位数', data: Array(labels.length).fill(medianLong),  type: 'line', borderColor: '#22c55e', borderDash: [8, 4], borderWidth: 2, pointRadius: 0, fill: false, order: 1 },
-              { label: '空头中位数', data: Array(labels.length).fill(medianShort), type: 'line', borderColor: '#ef4444', borderDash: [8, 4], borderWidth: 2, pointRadius: 0, fill: false, order: 1 }
+              { label: '多头中位数', data: Array(recent.length).fill(medianLong),  type: 'line', borderColor: '#22c55e', borderDash: [8, 4], borderWidth: 2, pointRadius: 0, fill: false, order: 1 },
+              { label: '空头中位数', data: Array(recent.length).fill(medianShort), type: 'line', borderColor: '#ef4444', borderDash: [8, 4], borderWidth: 2, pointRadius: 0, fill: false, order: 1 }
             ]
           },
           options: {
