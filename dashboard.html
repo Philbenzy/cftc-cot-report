@@ -118,29 +118,16 @@
     .cat-btn:hover { border-color: #22c55e; color: var(--text); }
     .cat-btn.active { background: #22c55e; border-color: #22c55e; color: #000; font-weight: 600; }
 
-    /* Overview Grid */
-    .overview-grid { display: grid; gap: 16px; margin-bottom: 24px; }
-    .overview-row {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 16px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-    .overview-commodity-title {
-      grid-column: span 2;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--gold);
-      padding-bottom: 10px;
+    /* Overview */
+    .overview-section-title {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 6px 0;
       border-bottom: 1px solid var(--border);
-      margin-bottom: 2px;
+      margin-bottom: 20px;
     }
-    .overview-chart-wrap { display: flex; flex-direction: column; gap: 6px; }
-    .overview-chart-label { font-size: 11px; color: var(--text-muted); }
-    .overview-chart-container { height: 180px; position: relative; }
 
     /* Header */
     .header {
@@ -1306,15 +1293,17 @@
       const grid = document.getElementById('overviewGrid');
 
       grid.innerHTML = commodities.map(c => `
-        <div class="overview-row">
-          <div class="overview-commodity-title">${c.name_en} &nbsp;${c.name}</div>
-          <div class="overview-chart-wrap">
-            <div class="overview-chart-label">未平仓合约量（近1年）</div>
-            <div class="overview-chart-container"><canvas id="ov_oi_${c.code}"></canvas></div>
-          </div>
-          <div class="overview-chart-wrap">
-            <div class="overview-chart-label">管理基金多空持仓对比（近12周）</div>
-            <div class="overview-chart-container"><canvas id="ov_cmp_${c.code}"></canvas></div>
+        <div>
+          <div class="overview-section-title">${c.name_en} &nbsp; ${c.name}</div>
+          <div class="charts">
+            <div class="chart-card">
+              <div class="chart-title">未平仓合约量（近1年）</div>
+              <div class="chart-container"><canvas id="ov_oi_${c.code}"></canvas></div>
+            </div>
+            <div class="chart-card">
+              <div class="chart-title">管理基金多空持仓对比（近12周）</div>
+              <div class="chart-container"><canvas id="ov_cmp_${c.code}"></canvas></div>
+            </div>
           </div>
         </div>
       `).join('');
