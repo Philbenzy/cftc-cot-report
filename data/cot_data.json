@@ -103252,74 +103252,66 @@
     "snapshot": [
       {
         "month": "2026-06",
-        "price": 6.427,
+        "price": 6.354,
         "contract": "HGM26.CMX"
       },
       {
         "month": "2026-07",
-        "price": 6.474,
+        "price": 6.337,
         "contract": "HGN26.CMX"
       },
       {
         "month": "2026-08",
-        "price": 6.5105,
+        "price": 6.3715,
         "contract": "HGQ26.CMX"
       },
       {
         "month": "2026-09",
-        "price": 6.5325,
+        "price": 6.4015,
         "contract": "HGU26.CMX"
       },
       {
         "month": "2026-10",
-        "price": 6.571,
+        "price": 6.4325,
         "contract": "HGV26.CMX"
       },
       {
         "month": "2026-11",
-        "price": 6.5765,
+        "price": 6.4635,
         "contract": "HGX26.CMX"
       },
       {
         "month": "2026-12",
-        "price": 6.623,
+        "price": 6.491,
         "contract": "HGZ26.CMX"
       },
       {
         "month": "2027-01",
-        "price": 6.6325,
+        "price": 6.499,
         "contract": "HGF27.CMX"
       },
       {
         "month": "2027-02",
-        "price": 6.663,
+        "price": 6.5365,
         "contract": "HGG27.CMX"
       },
       {
         "month": "2027-03",
-        "price": 6.714,
+        "price": 6.5705,
         "contract": "HGH27.CMX"
       },
       {
         "month": "2027-04",
-        "price": 6.6975,
+        "price": 6.592,
         "contract": "HGJ27.CMX"
       },
       {
         "month": "2027-05",
-        "price": 6.766,
+        "price": 6.676,
         "contract": "HGK27.CMX"
       }
     ],
     "spread_history": [
-      {
-        "date": "2023-05-19",
-        "m1_price": 3.814,
-        "m3_price": 3.8365,
-        "m1_contract": "HGN26",
-        "m3_contract": "HGZ26",
-        "spread": -0.0225
-      },
       {
         "date": "2023-05-26",
         "m1_price": 3.773,
@@ -104594,75 +104586,83 @@
       },
       {
         "date": "2026-06-12",
-        "m1_price": 6.474,
-        "m3_price": 6.623,
+        "m1_price": 6.445,
+        "m3_price": 6.5925,
         "m1_contract": "HGN26",
         "m3_contract": "HGZ26",
-        "spread": -0.149
+        "spread": -0.1475
+      },
+      {
+        "date": "2026-06-19",
+        "m1_price": 6.337,
+        "m3_price": 6.491,
+        "m1_contract": "HGN26",
+        "m3_contract": "HGZ26",
+        "spread": -0.154
       }
     ]
   },
   "shfe_copper": {
     "snapshot": [
       {
-        "month": "2026-06",
-        "price": 104570.0,
-        "contract": "CU2606"
-      },
-      {
         "month": "2026-07",
-        "price": 104660.0,
+        "price": 104780.0,
         "contract": "CU2607"
       },
       {
         "month": "2026-08",
-        "price": 104640.0,
+        "price": 104860.0,
         "contract": "CU2608"
       },
       {
         "month": "2026-09",
-        "price": 104650.0,
+        "price": 104890.0,
         "contract": "CU2609"
       },
       {
         "month": "2026-10",
-        "price": 104540.0,
+        "price": 104810.0,
         "contract": "CU2610"
       },
       {
         "month": "2026-11",
-        "price": 104540.0,
+        "price": 104830.0,
         "contract": "CU2611"
       },
       {
         "month": "2026-12",
-        "price": 104530.0,
+        "price": 104830.0,
         "contract": "CU2612"
       },
       {
         "month": "2027-01",
-        "price": 104470.0,
+        "price": 104820.0,
         "contract": "CU2701"
       },
       {
         "month": "2027-02",
-        "price": 104450.0,
+        "price": 104740.0,
         "contract": "CU2702"
       },
       {
         "month": "2027-03",
-        "price": 104410.0,
+        "price": 104810.0,
         "contract": "CU2703"
       },
       {
         "month": "2027-04",
-        "price": 104470.0,
+        "price": 104800.0,
         "contract": "CU2704"
       },
       {
         "month": "2027-05",
-        "price": 104530.0,
+        "price": 104820.0,
         "contract": "CU2705"
+      },
+      {
+        "month": "2027-06",
+        "price": 104840.0,
+        "contract": "CU2706"
       }
     ],
     "spread_history": [
@@ -106105,6 +106105,14 @@
         "m1_contract": "CU2606",
         "m3_contract": "CU2612",
         "spread": 40.0
+      },
+      {
+        "date": "2026-06-19",
+        "m1_price": 105610.0,
+        "m3_price": 104830.0,
+        "m1_contract": "CU2606",
+        "m3_contract": "CU2612",
+        "spread": 780.0
       }
     ],
     "inventory_history": [
@@ -106182,10 +106190,15 @@
         "date": "2026-06-19",
         "total": 36163,
         "change": -624
+      },
+      {
+        "date": "2026-06-26",
+        "total": 36163,
+        "change": -624
       }
     ]
   },
-  "updated_at": "2026-06-13 00:19:47",
+  "updated_at": "2026-06-20 00:09:02",
   "gvz": [
     {
       "date": "2023-01-03",
@@ -107086,6 +107099,11 @@
       "date": "2026-06-09",
       "close": 28.04,
       "gld_volume": 38783000
+    },
+    {
+      "date": "2026-06-16",
+      "close": 25.18,
+      "gld_volume": 50592400
     }
   ],
   "ovx": [
@@ -107988,6 +108006,11 @@
       "date": "2026-06-09",
       "close": 57.63,
       "uso_volume": 27497800
+    },
+    {
+      "date": "2026-06-16",
+      "close": 53.1,
+      "uso_volume": 41796000
     }
   ]
 }
